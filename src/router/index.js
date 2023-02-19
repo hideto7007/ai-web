@@ -1,14 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Auth from '../components/Auth.vue'
+// import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
+      path: '/auth',
+      name: 'Auth',
+      component: Auth
     },
+    // {
+    //   path: '/',
+    //   name: 'home',
+    //   component: HomeView
+    // },
     {
       path: '/about',
       name: 'about',
@@ -19,5 +25,11 @@ const router = createRouter({
     }
   ]
 })
+
+// router.beforeEach((to) => {
+//   if (to.meta.requiresAuth && localStorage.getItem("token") == null) {
+//     return { name: "Auth" };
+//   }
+// })
 
 export default router
