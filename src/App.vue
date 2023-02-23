@@ -1,18 +1,16 @@
+<script setup>
+
+import AppFooter from './components/pages/AppFooter.vue'
+import Auth from './components/Auth.vue'
+import AppBar from './components/pages/AppBar.vue'
+</script>
+
+
 <template>
   <v-app>
-    <v-main>
-      <router-view/>
-    </v-main>
+    <AppBar />
+    <Auth />
+    <AppFooter />
   </v-app>
 </template>
 
-<script>
-
-export default {
-  name: 'App',
-
-  data: () => ({
-    //
-  }),
-}
-</script>
