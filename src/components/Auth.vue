@@ -3,34 +3,18 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 // import router from '../router';
 // import App from '../App.vue'
-// import numberRuleRequired from '../numberRuleRequired'
-// const sexItem = ['男性', '女性']
-// const rule = [v => !!v || '必須項目です。']
-// const infoItem = ['会社員', '学生', 'フリーター', 'フリーランス']
+import rules from './rules'
 
 import NewAccount from "./NewAccount.vue"
 import { ref, watch, reactive, computed } from "vue"
 
 // 変数定義
 
-const username = ref("")
+const account = ref("")
 const password = ref("")
 const loading = ref(false)
 const valid = ref(false)
 const newAccountFlag = ref(false)
-const rules = reactive(
-  {
-    username: [
-      v => !!v || "ユーザー名は必須です",
-      v => (v && v.length > 4) || "ユーザー名は5文字以上でなければなりません",
-      v => /^[a-z0-9_]+$/.test(v) || "許可されていない文字が入力されています"
-    ],
-    password: [
-      v => !!v || "パスワードは必須です",
-      v => (v && v.length > 4) || "ユーザー名は5文字以上でなければなりません"
-    ],
-  }
-)
 
 // 監視処理
 // watch([username, password], ([afterUsername, afterPassword], [beforeUsername, beforePassword]) => {
@@ -184,10 +168,10 @@ const newMakeAccount = () => {
             <v-form v-else v-model="valid" lazy-validation>
             <v-container>
               <v-text-field
-                v-model="username"
+                v-model="account"
                 :counter="70"
                 label="ユーザー名"
-                :rules="rules.username"
+                :rules="rules.account"
                 maxlength="70"
                 required
               />
