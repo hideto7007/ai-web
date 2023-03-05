@@ -3,7 +3,7 @@ import rules from "./rules"
 
 export default {
   data: () => ({
-    valid: false,
+    validFlag: false,
     dialog: false,
     rules,
     inputForm: {
@@ -19,22 +19,29 @@ export default {
   watch: {
     'inputForm': {
       async handler(newVal, oldVal) {
-          if (typeof this.$refs.form !== 'undefined') {
-            const { valid } = await this.$refs.form.validate()
-            if (valid){
-                this.valid = true
+        if (typeof this.$refs.form !== 'undefined') {
+          const { valid } = await this.$refs.form.validate()
+          if (valid) {
+              this.validFlag = true
+              if (valid && firstName !== "") {
+                this.validFlag = true
               } else {
-                this.valid = false
-            }
+                this.validFlag = false
+              }
+            } else {
+              this.validFlag = false
           }
-        },
-      deep: true
+        }
+      },
+    deep: true,
+    immediate: true
     }
   },
 
   methods: {
     clear () {
       this.$refs.form.reset()
+      this.validFlag = false
     },
     save () {
       this.dialog = false
@@ -156,7 +163,7 @@ export default {
             color="blue-darken-1"
             variant="text"
             @click="save"
-            :disabled="!valid"
+            :disabled="!validFlag"
           >
             Save
           </v-btn>
