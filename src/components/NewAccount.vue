@@ -6,6 +6,8 @@ export default {
     validFlag: false,
     dialog: false,
     rules,
+    account_id: '99999',
+    editedIndex: -1,
     inputForm: {
       account: '',
       password: '',
@@ -21,6 +23,7 @@ export default {
       async handler(newVal, oldVal) {
         if (typeof this.$refs.form !== 'undefined') {
           const { valid } = await this.$refs.form.validate()
+          const { firstName } = newVal
           if (valid) {
               this.validFlag = true
               if (valid && firstName !== "") {
@@ -46,6 +49,46 @@ export default {
     save () {
       this.dialog = false
       console.log("save")
+      // let requestData = {
+      //   account_id: '',
+      //   data: []
+      // }
+      //   // Object.assign(this.table_data.data[this.editedIndex], this.editedItem)
+      //   requestData = {
+      //     account_id: this.income_id,
+      //     data: [this.inputForm]
+      //   }
+      //   axios
+      //     .post('/api/income/income_update/',  requestData)
+      //     .then((res) => {
+      //       if (res.data.result_code === 0) {
+      //         Swal.fire({
+      //           type: 'success',
+      //           title: '更新成功',
+      //           showConfirmButton:false,
+      //           showCloseButton:false
+      //           })
+      //         this.$router.go(this.$route.currentRoute)
+      //         this.updateFlag = false
+      //         } else {
+      //         Swal.fire({
+      //           message: res.data.message,
+      //           title: 'Error',
+      //           showConfirmButton:false,
+      //           showCloseButton:false
+      //         })
+      //         }
+      //       }).catch((res) => {
+      //         Swal.fire({
+      //           message: '失敗' + res,
+      //           title: 'Error',
+      //           showConfirmButton:false,
+      //           showCloseButton:false
+      //         })
+      //       }
+      //     ).finally(() => { 
+      //   })
+      //   close()
     },
     close () {
       this.dialog = false

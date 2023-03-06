@@ -14,7 +14,7 @@ const account = ref("")
 const password = ref("")
 const loading = ref(false)
 const valid = ref(false)
-const newAccountFlag = ref(false)
+const login_data = {}
 
 // 監視処理
 // watch([username, password], ([afterUsername, afterPassword], [beforeUsername, beforePassword]) => {
@@ -27,109 +27,27 @@ const newAccountFlag = ref(false)
 // 関数定義
 const login = async () => {
     console.log("クリック")
-    // axios.post('http://127.0.0.1:8000/api/login')
-  }
-
-const newMakeAccount = () => {
-  console.log("新規アカウント作成")
-  newAccountFlag.value = true
-  console.log(newAccountFlag.value)
+  //   if (await this.$refs.form.validate()) {
+  //     loading = true
+  //     axios.post('http://127.0.0.1:8000/api/login', login_data).then(res => {
+  //     this.$session.start();
+  //     this.$session.set('token', res.data.token);
+  //     this.$session.set('data', res.data.detail);
+  //     // router.push('/japanannualincome/' + `?user_id=${res.data.detail.params_id}`)
+  //     this.$router.go({path: this.$router.currentRoute.path, force: true})
+  //   }).catch(e => {
+  //     loading = false;
+  //     Swal.fire({
+  //     type: 'warning',
+  //     title: 'Error',
+  //     text: 'ユーザー名もしくはパスワード、または両方が間違っています',
+  //     showConfirmButton:false,
+  //     showCloseButton:false,
+  //     timer:3000
+  //     })
+  //   })
+  // }
 }
-
-
-  // axios.post('http://127.0.0.1:8000/api/login', [username, password]).then(
-  //     res => {
-  //       this.$session.start();
-  //       this.$session.set('token', res.data.token);
-  //       this.$session.set('data', res.data.detail);
-  //       router.push('/japanannualincome/' + `?user_id=${res.data.detail.params_id}`)
-  //       this.$router.go({path: this.$router.currentRoute.path, force: true})
-  //     }
-  //   )
-
-// export default {
-//     // name: 'Auth',
-//     // components: {
-//     //     App
-//     // },
-//     data: () => ({
-//         login_data: {
-//         },
-//         defalutData: {
-//             'first_name': '',
-//             'last_name': '',
-//             'sex': '',
-//             'age': '',
-//             'info': ''
-//         },
-//         activeFlag: false,
-//         credentials: {},
-//         id: 'b1639e6e-afe1-4b4f-aaf2-09966c663b0e',
-//         valid:true,
-//         loading:false,
-//         dialog: false,
-//         rules: {
-//         username: [
-//             v => !!v || "ユーザー名は必須です",
-//             v => (v && v.length > 4) || "ユーザー名は5文字以上でなければなりません",
-//             v => /^[a-z0-9_]+$/.test(v) || "許可されていない文字が入力されています"
-//         ],
-//         password: [
-//             v => !!v || "パスワードは必須です",
-//             v => (v && v.length > 4) || "ユーザー名は5文字以上でなければなりません"
-//         ],
-//         },
-//     }),
-//         watch: {
-//       'login_data': {
-//         handler(newVal, oldVal) {
-//             console.log(newVal, oldVal)
-//           if (typeof this.$refs.form !== 'undefined') {
-//             if (this.$refs.form.validate()){
-//                 this.activeFlag = true
-//               } else {
-//                 this.activeFlag = false
-//             }
-//           }
-//         },
-//         deep: true
-//       }
-//     },
-//     methods: {
-//         login() {
-//             if (this.$refs.form.validate()) {
-//                 console.log("kkk")
-//                 this.loading = true;
-//                 // axios.post('http://127.0.0.1:8000/api/login', this.login_data).then(res => {
-//                 // this.$session.start();
-//                 // this.$session.set('token', res.data.token);
-//                 // this.$session.set('data', res.data.detail);
-//                 // router.push('/japanannualincome/' + `?user_id=${res.data.detail.params_id}`)
-//                 // this.$router.go({path: this.$router.currentRoute.path, force: true})
-//             // eslint-disable-next-line
-//             // }).catch(e => {
-//             //     this.loading = false;
-//             //     Swal.fire({
-//             //     type: 'warning',
-//             //     title: 'Error',
-//             //     text: 'ユーザー名もしくはパスワード、または両方が間違っています',
-//             //     showConfirmButton:false,
-//             //     showCloseButton:false,
-//             //     timer:3000
-//             //     })
-//             // })
-//             }
-//         },
-//         createNew () {
-//             this.dialog = false
-//         },
-//         close () {
-//             this.login_data = Object.assign({}, this.defalutData)
-//             this.$refs.form.resetValidation()
-//             this.dialog = false
-//         }
-//     }
-// }
 </script>
 
 <template>
