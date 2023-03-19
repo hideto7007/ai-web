@@ -9,12 +9,11 @@ export default {
     account_id: '99999',
     editedIndex: -1,
     inputForm: {
-      account: '',
+      username: '',
       password: '',
       firstName: '',
       lastName: '',
-      email: '',
-      age: '',
+      email: ''
     }
   }),
 
@@ -151,10 +150,10 @@ export default {
                 md="4"
               >
                 <v-text-field
-                  v-model="inputForm.account"
+                  v-model="inputForm.username"
                   :counter="70"
-                  :rules="rules.account"
-                  label="account*"
+                  :rules="rules.username"
+                  label="username*"
                   maxlength="70"
                   required
                 ></v-text-field>
@@ -163,7 +162,7 @@ export default {
                 <v-text-field
                   v-model="inputForm.email"
                   :rules="rules.email"
-                  label="Email*"
+                  label="email*"
                   required
                 ></v-text-field>
               </v-col>
@@ -172,22 +171,10 @@ export default {
                   v-model="inputForm.password"
                   :counter="20"
                   :rules="rules.password"
-                  label="Password*"
+                  label="password*"
                   type="password"
                   maxlength="20"
                 ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-select
-                  v-model="inputForm.age"
-                  :rules="rules.required"
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Age*"
-                  required
-                ></v-select>
               </v-col>
             </v-row>
           </v-container>

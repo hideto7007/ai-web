@@ -10,7 +10,7 @@ import { ref, watch, reactive, computed } from "vue"
 
 // 変数定義
 
-const account = ref("")
+const username = ref("")
 const password = ref("")
 const loading = ref(false)
 const valid = ref(false)
@@ -86,10 +86,10 @@ const login = async () => {
             <v-form v-else v-model="valid" lazy-validation>
             <v-container>
               <v-text-field
-                v-model="account"
+                v-model="username"
                 :counter="70"
                 label="ユーザー名"
-                :rules="rules.account"
+                :rules="rules.username"
                 maxlength="70"
                 required
               />
