@@ -7,6 +7,13 @@ import rules from './rules'
 
 import NewAccount from "./NewAccount.vue"
 import { ref, watch, reactive, computed } from "vue"
+import { useRoute, useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
+
+// vueライブラリー定義
+const router = useRouter()
+const route = useRoute()
+
 
 // 変数定義
 
@@ -14,7 +21,6 @@ const username = ref("")
 const password = ref("")
 const loading = ref(false)
 const valid = ref(false)
-const login_data = {}
 
 // 監視処理
 // watch([username, password], ([afterUsername, afterPassword], [beforeUsername, beforePassword]) => {
@@ -26,27 +32,29 @@ const login_data = {}
 
 // 関数定義
 const login = async () => {
-    console.log("クリック")
-  //   if (await this.$refs.form.validate()) {
-  //     loading = true
-  //     axios.post('http://127.0.0.1:8000/api/login', login_data).then(res => {
-  //     this.$session.start();
-  //     this.$session.set('token', res.data.token);
-  //     this.$session.set('data', res.data.detail);
-  //     // router.push('/japanannualincome/' + `?user_id=${res.data.detail.params_id}`)
-  //     this.$router.go({path: this.$router.currentRoute.path, force: true})
-  //   }).catch(e => {
-  //     loading = false;
-  //     Swal.fire({
-  //     type: 'warning',
-  //     title: 'Error',
-  //     text: 'ユーザー名もしくはパスワード、または両方が間違っています',
-  //     showConfirmButton:false,
-  //     showCloseButton:false,
-  //     timer:3000
-  //     })
-  //   })
-  // }
+
+  let login_data = {
+    "username": username.value,
+    "password": password.value
+  }
+  loading.value = true
+  await axios.post('http://127.0.0.1:8000/api/login', login_data).then(res => {
+    // router.addRoute({ path: '/about/' + '?user_id=${res.data.detail.params_id}', component: About})
+    router.push('/about/' + `?user_id=${res.data.detail.params_id}`)
+    // router.go({path: router.currentRoute.path, force: true})
+  }).catch(e => {
+    loading.value = false
+    Swal.fire({
+    type: 'warning',
+    title: 'Error',
+    text: 'ユーザー名もしくはパスワード、または両方が間違っています',
+    showConfirmButton:false,
+    showCloseButton:false,
+    timer:3000
+    })
+  })
+  loading.value = false
+
 }
 </script>
 
