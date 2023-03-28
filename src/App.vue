@@ -1,16 +1,16 @@
 <script setup>
-
 import AppFooter from './components/pages/AppFooter.vue'
-import Auth from './components/Auth.vue'
 import AppBar from './components/pages/AppBar.vue'
 </script>
 
 
 <template>
   <v-app>
-    <AppBar />
-    <Auth />
-    <AppFooter />
+    <v-main>
+      <AppBar />
+        <router-view/>
+      <AppFooter />
+    </v-main>
   </v-app>
 </template>
 

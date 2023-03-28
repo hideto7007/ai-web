@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
 // import App from '../App.vue'
 import rules from './rules'
 
-import NewAccount from "./NewAccount.vue"
 import { ref, watch, reactive, computed } from "vue"
 import { useRoute, useRouter } from 'vue-router'
 // import { useRouter } from 'vue-router'
@@ -40,7 +39,7 @@ const login = async () => {
   loading.value = true
   await axios.post('http://127.0.0.1:8000/api/login', login_data).then(res => {
     // router.addRoute({ path: '/about/' + '?user_id=${res.data.detail.params_id}', component: About})
-    router.push('/about/' + `?user_id=${res.data.detail.params_id}`)
+    router.push('/objectmain/' + `?user_id=${res.data.detail.params_id}`)
     // router.go({path: router.currentRoute.path, force: true})
   }).catch(e => {
     loading.value = false
@@ -124,9 +123,9 @@ const login = async () => {
 
 <style lang="scss" scoped>
 
-.login-card {
-    top: 0;
-}
+// .login-card {
+//     top: 0;
+// }
 
 .v-row {
   margin: 0;
