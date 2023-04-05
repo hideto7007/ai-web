@@ -6,7 +6,7 @@ export default {
     validFlag: false,
     dialog: false,
     rules,
-    account_id: '99999',
+    account_id: '',
     editedIndex: -1,
     inputForm: {
       username: '',
