@@ -1,8 +1,7 @@
 <script setup>
 import axios from 'axios';
 import Swal from 'sweetalert2';
-// import router from '../router';
-// import App from '../App.vue'
+import NewAccount from '../components/NewAccount.vue'
 import rules from './rules'
 
 import { ref, watch, reactive, computed } from "vue"
@@ -38,7 +37,7 @@ const login = async () => {
   }
   loading.value = true
   await axios.post('http://127.0.0.1:8000/api/login', login_data).then(res => {
-    // router.addRoute({ path: '/about/' + '?user_id=${res.data.detail.params_id}', component: About})
+    localStorage.setItem("token", res.data.detail.token)
     router.push('/objectmain/' + `?user_id=${res.data.detail.params_id}`)
     // router.go({path: router.currentRoute.path, force: true})
   }).catch(e => {
@@ -47,9 +46,9 @@ const login = async () => {
     type: 'warning',
     title: 'Error',
     text: 'ユーザー名もしくはパスワード、または両方が間違っています',
-    showConfirmButton:false,
-    showCloseButton:false,
-    timer:3000
+    showConfirmButton: false,
+    showCloseButton: false,
+    timer: 3000
     })
   })
   loading.value = false

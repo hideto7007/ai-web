@@ -5,12 +5,14 @@ import AppBar from './components/pages/AppBar.vue'
 
 
 <template>
-  <v-app>
-    <v-main>
-      <AppBar />
-        <router-view/>
-      <AppFooter />
-    </v-main>
-  </v-app>
+  <Suspense>
+    <v-app>
+      <v-main>
+        <AppBar />
+          <router-view/>
+        <AppFooter />
+      </v-main>
+    </v-app>
+  </Suspense>
 </template>
 
