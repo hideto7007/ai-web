@@ -110,6 +110,7 @@ const save = () => {
   for (const val of reqestList) {
     if (val["object_detection_model_name"] === dialogm1.value) {
       console.log(val["id"])
+      request["id"] = val["id"]
 
     }
   }
@@ -180,6 +181,7 @@ const create = () => {
         <v-card-title>物体検知モデル名一覧</v-card-title>
         <v-divider></v-divider>
         <v-card-text style="height: 300px;">
+          更新したいモデル名を選択
           <v-radio-group
             v-model="dialogm1"
             column
@@ -190,6 +192,13 @@ const create = () => {
               :label="value"
               :value="value"
             ></v-radio>
+            <v-col></v-col>
+            以下のフォームに更新したいモデル名入力
+            <v-text-field
+              v-model="name"
+              label="更新するモデル名"
+              required
+            />
           </v-radio-group>
         </v-card-text>
         <v-divider></v-divider>
