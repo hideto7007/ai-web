@@ -11,17 +11,12 @@ const router = useRouter()
 
 // // 変数定義
 let imageList = []
+let numList = []
 
-// const password = ref("")
-// const loading = ref(false)
+const name = ref("")
+const dialogm1 = ref('')
+const dialog = ref(false)
 // const valid = ref(false)
-
-// // 監視処理
-// // watch([username, password], ([afterUsername, afterPassword], [beforeUsername, beforePassword]) => {
-// //         console.log("afterUsername次:", afterUsername, "beforeUsername前:", beforeUsername)
-// //         console.log("afterPassword次:", afterPassword, "beforePassword前:", beforePassword)
-// //     }
-// // )
 
 
 // // 関数定義
@@ -50,28 +45,6 @@ let imageList = []
 //   loading.value = false
 
 // }
-
-// 初期ロード
-
-// new Promise((resolve, reject) => {
-//   reject();
-// })
-//   .then(() => {
-//     if (typeof localStorage.token !== "undefined") {
-//       console.log(localStorage.token)
-//     }
-//   })
-//   .catch(() => {
-//     Swal.fire({
-//     type: 'warning',
-//     title: 'Error',
-//     text: 'セッションが切れてます。再ログインして下さい。',
-//     showConfirmButton:false,
-//     showCloseButton:false,
-//     timer:3000
-//     })
-//     router.push('/auth')
-//   });
 
 const load = async () => {
   let modelList = ref([])
@@ -120,22 +93,43 @@ const reqestList = await load()
 
 for (const i of reqestList) {
   imageList.push(i["object_detection_model_name"])
+  numList.push(i["id"])
 }
 
 
 const modelClick = (val) => {
-  if (imageList[val] === "EfficientDet") {
-    console.log(imageList[val])
-  } else if (imageList[val] === "YoloV7") {
-    console.log(imageList[val])
-  } else if (imageList[val] === "YoloV5") {
-    console.log(imageList[val])
-  }
+  console.log(numList[val])
 }
+
+const save = () => {
+  let request = {
+    "id": "",
+    "name": ""
+  }
+  dialog.value = false
+  for (const val of reqestList) {
+    if (val["object_detection_model_name"] === dialogm1.value) {
+      console.log(val["id"])
+
+    }
+  }
+  request["name"] = name.value
+
+  console.log(request)
+}
+const create = () => {
+  let idNum = Math.max(...numList) + 1
+  console.log(idNum)
+}
+
+// 監視処理
+// watch(reqestList, (afterValue, beforeValue) => {
+//         console.log("after:", afterValue, "before:", beforeValue)
+//     }
+// )
 
 
 </script>
-
 
 
 <template>
@@ -168,4 +162,61 @@ const modelClick = (val) => {
       </v-container>
     </v-item-group>
   </Suspense>
+  <v-row justify="center">
+    <v-dialog
+      v-model="dialog"
+      scrollable
+      width="auto"
+    >
+      <template v-slot:activator="{ props }">
+        <v-btn
+          color="primary"
+          v-bind="props"
+        >
+          新規追加及び更新、削除
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title>物体検知モデル名一覧</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text style="height: 300px;">
+          <v-radio-group
+            v-model="dialogm1"
+            column
+          >
+            <v-radio
+              v-for="(value, keys) in imageList"
+              :key="keys"
+              :label="value"
+              :value="value"
+            ></v-radio>
+          </v-radio-group>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="dialog = false"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="save"
+          >
+            Save
+          </v-btn>
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="create"
+          >
+            create
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
 </template>
