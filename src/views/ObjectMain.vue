@@ -14,8 +14,10 @@ let imageList = []
 let numList = []
 
 const name = ref("")
+const createName = ref("")
 const dialogm1 = ref('')
 const dialog = ref(false)
+const createDialog = ref(false)
 // const valid = ref(false)
 
 
@@ -109,7 +111,6 @@ const save = () => {
   dialog.value = false
   for (const val of reqestList) {
     if (val["object_detection_model_name"] === dialogm1.value) {
-      console.log(val["id"])
       request["id"] = val["id"]
 
     }
@@ -119,15 +120,13 @@ const save = () => {
   console.log(request)
 }
 const create = () => {
-  let idNum = Math.max(...numList) + 1
-  console.log(idNum)
+  createDialog.value = false
+  let request = {
+    "id": String(Math.max(...numList) + 1),
+    "name": createName.value
+  }
+  console.log(request)
 }
-
-// 監視処理
-// watch(reqestList, (afterValue, beforeValue) => {
-//         console.log("after:", afterValue, "before:", beforeValue)
-//     }
-// )
 
 
 </script>
@@ -217,13 +216,61 @@ const create = () => {
           >
             Save
           </v-btn>
-          <v-btn
-            color="blue-darken-1"
-            variant="text"
-            @click="create"
-          >
-            create
-          </v-btn>
+          <v-row justify="center">
+            <v-dialog
+              v-model="createDialog"
+              persistent
+              width="400"
+            >
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="primary"
+                  v-bind="props"
+                >
+                create
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="text-h5">物体検知モデル名新規追加</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="30"
+                        md="50"
+                      >
+                        <v-text-field
+                          v-model="createName"
+                          label="新規モデル名"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="blue-darken-1"
+                    variant="text"
+                    @click="createDialog = false"
+                  >
+                    Close
+                  </v-btn>
+                  <v-btn
+                    color="blue-darken-1"
+                    variant="text"
+                    @click="create"
+                  >
+                    save
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-row>
         </v-card-actions>
       </v-card>
     </v-dialog>
