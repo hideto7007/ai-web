@@ -48,6 +48,7 @@ export default {
     save () {
       this.dialog = false
       console.log("save")
+      console.log(this.inputForm)
       // let requestData = {
       //   account_id: '',
       //   data: []
