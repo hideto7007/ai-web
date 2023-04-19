@@ -38,7 +38,7 @@ const post = async (api, request, router, path, type) => {
           }
         }).catch((res) => {
           Swal.fire({
-            text: '失敗' + res,
+            text: '失敗: ' + res,
             title: errorTitle,
             icon: 'error',
             showConfirmButton: true,
