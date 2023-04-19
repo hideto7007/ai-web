@@ -71,7 +71,7 @@ export default {
       //         this.updateFlag = false
       //         } else {
       //         Swal.fire({
-      //           message: res.data.message,
+      //           text: res.data.message,
       //           title: 'Error',
       //           showConfirmButton:false,
       //           showCloseButton:false
@@ -79,7 +79,7 @@ export default {
       //         }
       //       }).catch((res) => {
       //         Swal.fire({
-      //           message: '失敗' + res,
+      //           text: '失敗: ' + res,
       //           title: 'Error',
       //           showConfirmButton:false,
       //           showCloseButton:false

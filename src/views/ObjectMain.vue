@@ -54,9 +54,9 @@ const load = async () => {
               return modelList
             }).catch((err) => {
               Swal.fire({
-              type: 'warning' + err,
+              type: 'warning',
               title: 'Error',
-              text: 'サーバーエラー',
+              text: 'サーバーエラー: ' + err,
               showConfirmButton:false,
               showCloseButton:false,
               })
