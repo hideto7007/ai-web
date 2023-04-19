@@ -6,7 +6,7 @@ export default {
     validFlag: false,
     dialog: false,
     rules,
-    account_id: '',
+    username_id: '',
     editedIndex: -1,
     inputForm: {
       username: '',
@@ -50,12 +50,12 @@ export default {
       console.log("save")
       console.log(this.inputForm)
       // let requestData = {
-      //   account_id: '',
+      //   username_id: '',
       //   data: []
       // }
       //   // Object.assign(this.table_data.data[this.editedIndex], this.editedItem)
       //   requestData = {
-      //     account_id: this.income_id,
+      //     username_id: this.income_id,
       //     data: [this.inputForm]
       //   }
       //   axios
