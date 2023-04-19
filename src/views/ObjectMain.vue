@@ -111,6 +111,11 @@ const create = async () => {
   // DBの方でid値を更新してくれる
   // 一旦、このままで実装進める
   dialog.value = false
+
+  if (!numList.length) {
+    numList.push(1) 
+  }
+  
   let request = {
     "data": [
       {
@@ -223,6 +228,7 @@ const deleted = async () => {
             color="blue-darken-1"
             variant="text"
             @click="save"
+            :disabled="!validFlag"
           >
             Save
           </v-btn>
