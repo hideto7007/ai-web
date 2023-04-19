@@ -4,9 +4,11 @@ import { ref, watch, reactive, computed } from "vue"
 import { useRoute, useRouter } from 'vue-router'
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import post from '../components/post'
 
 // // vueライブラリー定義
 const router = useRouter()
+const currentRoute = router.currentRoute.value
 
 
 // // 変数定義
@@ -18,41 +20,13 @@ const createName = ref("")
 const dialogm1 = ref('')
 const dialog = ref(false)
 const createDialog = ref(false)
-// const valid = ref(false)
 
-
-// // 関数定義
-// const login = async () => {
-
-//   let login_data = {
-//     "username": username.value,
-//     "password": password.value
-//   }
-//   loading.value = true
-//   await axios.post('http://127.0.0.1:8000/api/login', login_data).then(res => {
-//     // router.addRoute({ path: '/about/' + '?user_id=${res.data.detail.params_id}', component: About})
-//     router.push('/objectmain/' + `?user_id=${res.data.detail.params_id}`)
-//     // router.go({path: router.currentRoute.path, force: true})
-//   }).catch(e => {
-//     loading.value = false
-//     Swal.fire({
-//     type: 'warning',
-//     title: 'Error',
-//     text: 'ユーザー名もしくはパスワード、または両方が間違っています',
-//     showConfirmButton:false,
-//     showCloseButton:false,
-//     timer:3000
-//     })
-//   })
-//   loading.value = false
-
-// }
+const updateAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_update"
 
 const load = async () => {
   let modelList = ref([])
   if (typeof localStorage.token !== "undefined") {
     console.log(localStorage.token)
-    // 後々APIから受け取れるようにする
     return await axios
           .get('http://127.0.0.1:8000/api/object_detection_model/object_detection_model_list/')
           .then((res) => {
@@ -103,29 +77,37 @@ const modelClick = (val) => {
   console.log(numList[val])
 }
 
-const save = () => {
+const save = async () => {
   let request = {
-    "id": "",
-    "name": ""
+    "data": [
+      {
+        "id": "",
+        "name": ""
+      }
+    ]
   }
   dialog.value = false
   for (const val of reqestList) {
     if (val["object_detection_model_name"] === dialogm1.value) {
-      request["id"] = val["id"]
+      request["data"][0]["id"] = val["id"]
 
     }
   }
-  request["name"] = name.value
+  request["data"][0]["name"] = name.value
 
-  console.log(request)
+  await post(updateAPI, request, router, currentRoute)
 }
-const create = () => {
+const create = async () => {
   createDialog.value = false
   let request = {
-    "id": String(Math.max(...numList) + 1),
-    "name": createName.value
+    "data": [
+      {
+        "id": String(Math.max(...numList) + 1),
+        "name": createName.value
+      }
+    ]
   }
-  console.log(request)
+  await post(updateAPI, request, router, currentRoute)
 }
 
 
@@ -195,9 +177,10 @@ const create = () => {
             以下のフォームに更新したいモデル名入力
             <v-text-field
               v-model="name"
-              label="更新するモデル名"
+              label="*更新するモデル名"
               required
             />
+            <small>*必須項目です</small>
           </v-radio-group>
         </v-card-text>
         <v-divider></v-divider>
@@ -244,9 +227,10 @@ const create = () => {
                       >
                         <v-text-field
                           v-model="createName"
-                          label="新規モデル名"
+                          label="*新規モデル名"
                           required
-                        ></v-text-field>
+                        />
+                        <small>*必須項目です</small>
                       </v-col>
                     </v-row>
                   </v-container>
