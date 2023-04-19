@@ -5,12 +5,11 @@ import NewAccount from '../components/NewAccount.vue'
 import rules from './rules'
 
 import { ref, watch, reactive, computed } from "vue"
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 // import { useRouter } from 'vue-router'
 
 // vueライブラリー定義
 const router = useRouter()
-const route = useRoute()
 
 
 // 変数定義
@@ -43,7 +42,7 @@ const login = async () => {
   }).catch(e => {
     loading.value = false
     Swal.fire({
-    type: 'warning',
+    icon: 'warning',
     title: 'Error',
     text: 'ユーザー名もしくはパスワード、または両方が間違っています',
     showConfirmButton: false,
