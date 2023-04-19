@@ -6,12 +6,11 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import post from '../components/post'
 
-// // vueライブラリー定義
+// vueライブラリー定義
 const router = useRouter()
 const currentRoute = router.currentRoute.value
 
-
-// // 変数定義
+// 変数定義
 let imageList = []
 let numList = []
 
@@ -20,8 +19,18 @@ const createName = ref("")
 const dialogm1 = ref('')
 const dialog = ref(false)
 const createDialog = ref(false)
+const validFlag = ref(false)
 
-const updateAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_update"
+// 監視処理
+watch(dialogm1, (afterDialogm1, beforeDialogm1) => {
+        if (afterDialogm1 !== '') {
+          validFlag.value = true
+        }
+    }
+)
+
+const updateCreateAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_update"
+const deleteAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_delete"
 
 const load = async () => {
   let modelList = ref([])
@@ -78,6 +87,7 @@ const modelClick = (val) => {
 }
 
 const save = async () => {
+  dialog.value = false
   let request = {
     "data": [
       {
@@ -86,19 +96,21 @@ const save = async () => {
       }
     ]
   }
-  dialog.value = false
   for (const val of reqestList) {
     if (val["object_detection_model_name"] === dialogm1.value) {
       request["data"][0]["id"] = val["id"]
-
     }
   }
   request["data"][0]["name"] = name.value
 
-  await post(updateAPI, request, router, currentRoute)
+  await post(updateCreateAPI, request, router, currentRoute, 'update')
 }
+
 const create = async () => {
-  createDialog.value = false
+  // ここで一番大きい値のidを受け取っても既にDBの方で登録した履歴があれば
+  // DBの方でid値を更新してくれる
+  // 一旦、このままで実装進める
+  dialog.value = false
   let request = {
     "data": [
       {
@@ -107,7 +119,22 @@ const create = async () => {
       }
     ]
   }
-  await post(updateAPI, request, router, currentRoute)
+  await post(updateCreateAPI, request, router, currentRoute, 'create')
+
+  createDialog.value = false
+}
+
+const deleted = async () => {
+  dialog.value = false
+  let request = {
+    "id": '',
+  }
+  for (const val of reqestList) {
+    if (val["object_detection_model_name"] === dialogm1.value) {
+      request["id"] = val["id"]
+    }
+  }
+  await post(deleteAPI, request, router, currentRoute, 'delete')
 }
 
 
@@ -198,6 +225,14 @@ const create = async () => {
             @click="save"
           >
             Save
+          </v-btn>
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="deleted"
+            :disabled="!validFlag"
+          >
+            Delete
           </v-btn>
           <v-row justify="center">
             <v-dialog
