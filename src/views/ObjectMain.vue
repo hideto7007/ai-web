@@ -8,7 +8,7 @@ import post from '../components/post'
 
 // vueライブラリー定義
 const router = useRouter()
-const currentRoute = router.currentRoute.value
+const currentRoute = router.currentRoute.value.fullPath
 
 // 変数定義
 let imageList = []
