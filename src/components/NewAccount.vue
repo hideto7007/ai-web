@@ -1,5 +1,8 @@
 <script>
 import rules from "./rules"
+import post from "./post"
+
+const updateCreateAPI = "http://127.0.0.1:8000/api/create_account"
 
 export default {
   data: () => ({
@@ -9,6 +12,7 @@ export default {
     username_id: '',
     editedIndex: -1,
     inputForm: {
+      id: '999999999',
       username: '',
       password: '',
       firstName: '',
@@ -45,50 +49,18 @@ export default {
       this.$refs.form.reset()
       this.validFlag = false
     },
-    save () {
+    async save () {
       this.dialog = false
-      console.log("save")
-      console.log(this.inputForm)
-      // let requestData = {
-      //   username_id: '',
-      //   data: []
-      // }
-      //   // Object.assign(this.table_data.data[this.editedIndex], this.editedItem)
-      //   requestData = {
-      //     username_id: this.income_id,
-      //     data: [this.inputForm]
-      //   }
-      //   axios
-      //     .post('/api/income/income_update/',  requestData)
-      //     .then((res) => {
-      //       if (res.data.result_code === 0) {
-      //         Swal.fire({
-      //           type: 'success',
-      //           title: '更新成功',
-      //           showConfirmButton:false,
-      //           showCloseButton:false
-      //           })
-      //         this.$router.go(this.$route.currentRoute)
-      //         this.updateFlag = false
-      //         } else {
-      //         Swal.fire({
-      //           text: res.data.message,
-      //           title: 'Error',
-      //           showConfirmButton:false,
-      //           showCloseButton:false
-      //         })
-      //         }
-      //       }).catch((res) => {
-      //         Swal.fire({
-      //           text: '失敗: ' + res,
-      //           title: 'Error',
-      //           showConfirmButton:false,
-      //           showCloseButton:false
-      //         })
-      //       }
-      //     ).finally(() => { 
-      //   })
-      //   close()
+      let requestData = {
+        data: []
+      }
+        requestData = {
+          data: [this.inputForm]
+        }
+
+      await post(updateCreateAPI, requestData, this.$router, this.$route.currentRoute, 'createAccount')
+
+      this.$router.go(this.$route.currentRoute)
     },
     close () {
       this.dialog = false

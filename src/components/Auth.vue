@@ -49,6 +49,7 @@ const login = async () => {
     showCloseButton: false,
     timer: 3000
     })
+    router.go({path: router.currentRoute.path, force: true})
   })
   loading.value = false
 
