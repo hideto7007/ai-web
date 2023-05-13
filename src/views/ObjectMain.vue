@@ -34,8 +34,7 @@ const deleteAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detec
 
 const load = async () => {
   let modelList = ref([])
-  if (typeof localStorage.token !== "undefined") {
-    console.log(localStorage.token)
+    console.log(sessionStorage.getItem('token'))
     return await axios
           .get('http://127.0.0.1:8000/api/object_detection_model/object_detection_model_list/')
           .then((res) => {
@@ -46,7 +45,7 @@ const load = async () => {
                 Swal.fire({
                 type: 'warning',
                 title: 'Error',
-                text: ErrorMessage,
+                text: 'エラー',
                 showConfirmButton:false,
                 showCloseButton:false,
                 })
@@ -61,9 +60,78 @@ const load = async () => {
               showCloseButton:false,
               })
             }).finally(() => {})
-  } else {
+  } 
+
+if (sessionStorage.getItem('token') !== null) {
+  const reqestList = await load()
+  
+  for (const i of reqestList) {
+    imageList.push(i["object_detection_model_name"])
+    numList.push(i["id"])
+  }
+
+  const modelClick = (val) => {
+    console.log(numList[val])
+  }
+
+  const save = async () => {
+    dialog.value = false
+    let request = {
+      "data": [
+        {
+          "id": "",
+          "name": ""
+        }
+      ]
+    }
+    for (const val of reqestList) {
+      if (val["object_detection_model_name"] === dialogm1.value) {
+        request["data"][0]["id"] = val["id"]
+      }
+    }
+    request["data"][0]["name"] = name.value
+
+    await post(updateCreateAPI, request, router, currentRoute, 'update')
+  }
+
+  const create = async () => {
+    // ここで一番大きい値のidを受け取っても既にDBの方で登録した履歴があれば
+    // DBの方でid値を更新してくれる
+    // 一旦、このままで実装進める
+    dialog.value = false
+
+    if (!numList.length) {
+      numList.push(1) 
+    }
+    
+    let request = {
+      "data": [
+        {
+          "id": String(Math.max(...numList) + 1),
+          "name": createName.value
+        }
+      ]
+    }
+    await post(updateCreateAPI, request, router, currentRoute, 'create')
+
+    createDialog.value = false
+  }
+
+  const deleted = async () => {
+    dialog.value = false
+    let request = {
+      "id": '',
+    }
+    for (const val of reqestList) {
+      if (val["object_detection_model_name"] === dialogm1.value) {
+        request["id"] = val["id"]
+      }
+    }
+    await post(deleteAPI, request, router, currentRoute, 'delete')
+  }
+} else {
     await Swal.fire({
-      type: 'warning',
+      icon: 'warning',
       title: 'Error',
       text: 'セッションが切れてます。再ログインして下さい。',
       showConfirmButton:false,
@@ -72,75 +140,6 @@ const load = async () => {
       })
       router.push('/auth')
     }
-  }
-
-const reqestList = await load()
-
-for (const i of reqestList) {
-  imageList.push(i["object_detection_model_name"])
-  numList.push(i["id"])
-}
-
-
-const modelClick = (val) => {
-  console.log(numList[val])
-}
-
-const save = async () => {
-  dialog.value = false
-  let request = {
-    "data": [
-      {
-        "id": "",
-        "name": ""
-      }
-    ]
-  }
-  for (const val of reqestList) {
-    if (val["object_detection_model_name"] === dialogm1.value) {
-      request["data"][0]["id"] = val["id"]
-    }
-  }
-  request["data"][0]["name"] = name.value
-
-  await post(updateCreateAPI, request, router, currentRoute, 'update')
-}
-
-const create = async () => {
-  // ここで一番大きい値のidを受け取っても既にDBの方で登録した履歴があれば
-  // DBの方でid値を更新してくれる
-  // 一旦、このままで実装進める
-  dialog.value = false
-
-  if (!numList.length) {
-    numList.push(1) 
-  }
-  
-  let request = {
-    "data": [
-      {
-        "id": String(Math.max(...numList) + 1),
-        "name": createName.value
-      }
-    ]
-  }
-  await post(updateCreateAPI, request, router, currentRoute, 'create')
-
-  createDialog.value = false
-}
-
-const deleted = async () => {
-  dialog.value = false
-  let request = {
-    "id": '',
-  }
-  for (const val of reqestList) {
-    if (val["object_detection_model_name"] === dialogm1.value) {
-      request["id"] = val["id"]
-    }
-  }
-  await post(deleteAPI, request, router, currentRoute, 'delete')
-}
 
 
 </script>
