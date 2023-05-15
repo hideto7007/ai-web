@@ -8,7 +8,7 @@ import post from '../components/post'
 
 // vueライブラリー定義
 const router = useRouter()
-const currentRoute = router.currentRoute.value
+const currentRoute = router.currentRoute.value.fullPath
 
 // 変数定義
 let imageList = []
@@ -34,8 +34,7 @@ const deleteAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detec
 
 const load = async () => {
   let modelList = ref([])
-  if (typeof localStorage.token !== "undefined") {
-    console.log(localStorage.token)
+    console.log(sessionStorage.getItem('token'))
     return await axios
           .get('http://127.0.0.1:8000/api/object_detection_model/object_detection_model_list/')
           .then((res) => {
@@ -44,9 +43,9 @@ const load = async () => {
               modelList = res.data.detail.result
               } else {
                 Swal.fire({
-                type: 'warning',
+                icon: 'warning',
                 title: 'Error',
-                text: ErrorMessage,
+                text: 'エラー',
                 showConfirmButton:false,
                 showCloseButton:false,
                 })
@@ -54,16 +53,92 @@ const load = async () => {
               return modelList
             }).catch((err) => {
               Swal.fire({
-              type: 'warning',
+              icon: 'warning',
               title: 'Error',
               text: 'サーバーエラー: ' + err,
               showConfirmButton:false,
               showCloseButton:false,
               })
             }).finally(() => {})
-  } else {
+  } 
+
+
+let save
+let modelClick
+let create
+let deleted
+
+
+if (sessionStorage.getItem('token') !== null) {
+  const reqestList = await load()
+  
+  for (const i of reqestList) {
+    imageList.push(i["object_detection_model_name"])
+    numList.push(i["id"])
+  }
+
+  modelClick = (val) => {
+    console.log(numList[val])
+  }
+
+  save = async () => {
+    dialog.value = false
+    let request = {
+      "data": [
+        {
+          "id": "",
+          "name": ""
+        }
+      ]
+    }
+    for (const val of reqestList) {
+      if (val["object_detection_model_name"] === dialogm1.value) {
+        request["data"][0]["id"] = val["id"]
+      }
+    }
+    request["data"][0]["name"] = name.value
+
+    await post(updateCreateAPI, request, router, currentRoute, 'update')
+  }
+
+  create = async () => {
+    // ここで一番大きい値のidを受け取っても既にDBの方で登録した履歴があれば
+    // DBの方でid値を更新してくれる
+    // 一旦、このままで実装進める
+    dialog.value = false
+
+    if (!numList.length) {
+      numList.push(1) 
+    }
+    
+    let request = {
+      "data": [
+        {
+          "id": String(Math.max(...numList) + 1),
+          "name": createName.value
+        }
+      ]
+    }
+    await post(updateCreateAPI, request, router, currentRoute, 'create')
+
+    createDialog.value = false
+  }
+
+  deleted = async () => {
+    dialog.value = false
+    let request = {
+      "id": '',
+    }
+    for (const val of reqestList) {
+      if (val["object_detection_model_name"] === dialogm1.value) {
+        request["id"] = val["id"]
+      }
+    }
+    await post(deleteAPI, request, router, currentRoute, 'delete')
+  }
+} else {
     await Swal.fire({
-      type: 'warning',
+      icon: 'warning',
       title: 'Error',
       text: 'セッションが切れてます。再ログインして下さい。',
       showConfirmButton:false,
@@ -72,75 +147,6 @@ const load = async () => {
       })
       router.push('/auth')
     }
-  }
-
-const reqestList = await load()
-
-for (const i of reqestList) {
-  imageList.push(i["object_detection_model_name"])
-  numList.push(i["id"])
-}
-
-
-const modelClick = (val) => {
-  console.log(numList[val])
-}
-
-const save = async () => {
-  dialog.value = false
-  let request = {
-    "data": [
-      {
-        "id": "",
-        "name": ""
-      }
-    ]
-  }
-  for (const val of reqestList) {
-    if (val["object_detection_model_name"] === dialogm1.value) {
-      request["data"][0]["id"] = val["id"]
-    }
-  }
-  request["data"][0]["name"] = name.value
-
-  await post(updateCreateAPI, request, router, currentRoute, 'update')
-}
-
-const create = async () => {
-  // ここで一番大きい値のidを受け取っても既にDBの方で登録した履歴があれば
-  // DBの方でid値を更新してくれる
-  // 一旦、このままで実装進める
-  dialog.value = false
-
-  if (!numList.length) {
-    numList.push(1) 
-  }
-  
-  let request = {
-    "data": [
-      {
-        "id": String(Math.max(...numList) + 1),
-        "name": createName.value
-      }
-    ]
-  }
-  await post(updateCreateAPI, request, router, currentRoute, 'create')
-
-  createDialog.value = false
-}
-
-const deleted = async () => {
-  dialog.value = false
-  let request = {
-    "id": '',
-  }
-  for (const val of reqestList) {
-    if (val["object_detection_model_name"] === dialogm1.value) {
-      request["id"] = val["id"]
-    }
-  }
-  await post(deleteAPI, request, router, currentRoute, 'delete')
-}
 
 
 </script>
@@ -218,11 +224,11 @@ const deleted = async () => {
         <v-divider></v-divider>
         <v-card-actions>
           <v-btn
-            color="blue-darken-1"
+            color="green"
             variant="text"
             @click="dialog = false"
           >
-            Close
+            閉じる
           </v-btn>
           <v-btn
             color="blue-darken-1"
@@ -230,7 +236,7 @@ const deleted = async () => {
             @click="save"
             :disabled="!validFlag"
           >
-            Save
+            保存
           </v-btn>
           <v-btn
             color="blue-darken-1"
@@ -238,7 +244,7 @@ const deleted = async () => {
             @click="deleted"
             :disabled="!validFlag"
           >
-            Delete
+            削除
           </v-btn>
           <v-row justify="center">
             <v-dialog
@@ -251,7 +257,7 @@ const deleted = async () => {
                   color="primary"
                   v-bind="props"
                 >
-                create
+                新規作成
                 </v-btn>
               </template>
               <v-card>
@@ -279,18 +285,18 @@ const deleted = async () => {
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn
-                    color="blue-darken-1"
+                    color="green"
                     variant="text"
                     @click="createDialog = false"
                   >
-                    Close
+                    閉じる
                   </v-btn>
                   <v-btn
                     color="blue-darken-1"
                     variant="text"
                     @click="create"
                   >
-                    save
+                    保存
                   </v-btn>
                 </v-card-actions>
               </v-card>

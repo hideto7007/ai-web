@@ -36,7 +36,9 @@ const login = async () => {
   }
   loading.value = true
   await axios.post('http://127.0.0.1:8000/api/login', login_data).then(res => {
-    localStorage.setItem("token", res.data.detail.token)
+    sessionStorage.setItem('token', res.data.detail.token)
+    sessionStorage.setItem('id', res.data.detail.params_id)
+    sessionStorage.setItem('username', res.data.detail.username)
     router.push('/objectmain/' + `?user_id=${res.data.detail.params_id}`)
     // router.go({path: router.currentRoute.path, force: true})
   }).catch(e => {
@@ -49,6 +51,7 @@ const login = async () => {
     showCloseButton: false,
     timer: 3000
     })
+    router.go({path: router.currentRoute.path, force: true})
   })
   loading.value = false
 
@@ -67,7 +70,7 @@ const login = async () => {
       <v-card
         :elevation="isHovering ? 8 : 4"
         class="mx-auto"
-        height="370"
+        height="420"
         max-width="350"
         v-bind="props"
       >
@@ -107,8 +110,14 @@ const login = async () => {
                 maxlength="20"
                 required
               />
+              <p>
+                ユーザー名:ai_app<br>
+                パスワード:Ai-app123dev
+              </p>
               <v-container>
-                <NewAccount />
+                <NewAccount 
+                  btn-title='新規アカウント作成はこちら'
+                  title='新規アカウント作成'/>
               </v-container>
             <v-btn class="pink white--text" :disabled="!valid" @click="login">Login</v-btn>
           </v-container>
