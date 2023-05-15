@@ -36,9 +36,9 @@ const login = async () => {
   }
   loading.value = true
   await axios.post('http://127.0.0.1:8000/api/login', login_data).then(res => {
-    localStorage.setItem("token", res.data.detail.token)
     sessionStorage.setItem('token', res.data.detail.token)
     sessionStorage.setItem('id', res.data.detail.params_id)
+    sessionStorage.setItem('username', res.data.detail.username)
     router.push('/objectmain/' + `?user_id=${res.data.detail.params_id}`)
     // router.go({path: router.currentRoute.path, force: true})
   }).catch(e => {
