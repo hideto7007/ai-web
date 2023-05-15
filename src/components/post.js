@@ -30,7 +30,7 @@ const post = async (api, request, router, path, type) => {
     .then(res => {        
         if (res.data.result_code === 0) {
           Swal.fire({
-            type: 'success',
+            icon: 'success',
             title: successTitle,
             showConfirmButton: false,
             showCloseButton: false
@@ -38,6 +38,7 @@ const post = async (api, request, router, path, type) => {
             router.go(path)
           } else {
           Swal.fire({
+            icon: 'error',
             text: res.data.message,
             title: 'Error',
             showConfirmButton: false,
