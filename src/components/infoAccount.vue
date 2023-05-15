@@ -1,54 +1,38 @@
 <script>
 import rules from "./rules"
 import post from "./post"
-import infoAccount from "./infoAccount.vue"
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const updateCreateAPI = "http://127.0.0.1:8000/api/create_account"
+const requestAPI = "http://127.0.0.1:8000/api/user_list"
 
 export default {
-  components: {
-    infoAccount,
-  },
   props: {
-      btnTitle: {
-          type: String,
-          default: ''
-      },
       title: {
           type: String,
           default: ''
       },
-      dialogFlag: {
-        type: Boolean,
-        required: false
-      },
-      activeFlag: {
-        type: Boolean,
-        default: true
-      },
-      newFlag: {
-        type: Boolean,
-        default: true
-      }
+      // dialog: {
+      //   type: Boolean,
+      //   default: false
+      // }
     },
   data: () => ({
     validFlag: false,
     dialog: false,
     rules,
-    username_id: '',
+    user_id: '',
     editedIndex: -1,
-    inputForm: {
-      id: 'undefined',
-      username: '',
-      password: '',
-      first_name: '',
-      last_name: '',
-      email: ''
+    veiwflag: false,
+    query: '',
+    form_data: {
+      data: []
     }
   }),
 
   watch: {
-    'inputForm': {
+    'form_data': {
       async handler(newVal, oldVal) {
         if (typeof this.$refs.form !== 'undefined') {
           const { valid } = await this.$refs.form.validate()
@@ -68,26 +52,66 @@ export default {
     deep: true,
     immediate: true
     },
-    dialogFlag() {
-      this.dialog = this.dialogFlag
-    }
+  // 'dialog': {
+  //   handler(newVal, oldVal) {
+  //     console.log(newVal, oldVal)
+  //   }
+  // }
   },
-  mounted() {
-        this.dialog = this.dialogFlag
+  async created() {
+    if (sessionStorage.getItem('id')) {
+      this.veiwflag = true
+        await this.getAccountRequestList (sessionStorage.getItem('id'))
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: 'アカウント情報',
+        text: 'ログインしてないのでアカウント情報はありません。',
+        showConfirmButton:false,
+        showCloseButton:false,
+      })
+    }
+
   },
   methods: {
+    async getAccountRequestList (id){
+        let queryList = []
+        queryList.push('id=' + id)
+
+        this.query = '?' + queryList.join('&')
+        return axios
+          .get(requestAPI + this.query)
+          .then((res) => {
+            if (res.data.result_code === 0) {
+              // 入力値取得
+              this.form_data.data = res.data.detail.result
+              } else {
+                Swal.fire({
+                  icon: 'warning',
+                  title: 'Error',
+                  text: ErrorMessage,
+                  showConfirmButton:false,
+                  showCloseButton:false,
+                })
+                this.$router.push('/auth') 
+              }
+            }).catch((err) => {
+              Swal.fire({
+                icon: 'warning',
+                title: 'Error',
+                text: err,
+                showConfirmButton:false,
+                showCloseButton:false,
+              })
+          }).finally()
+      },
     clear () {
       this.$refs.form.reset()
       this.validFlag = false
     },
     async save () {
       this.dialog = false
-      let requestData = {
-        data: []
-      }
-        requestData = {
-          data: [this.inputForm]
-        }
+      let requestData = this.form_data
 
       await post(updateCreateAPI, requestData, this.$router, this.$route.currentRoute, 'createAccount')
 
@@ -103,62 +127,37 @@ export default {
 
 <template>
   <v-row justify="center">
-    <v-dialog
-      v-model="dialog"
-      persistent
-      width="1024"
-    >
-      <template v-slot:activator="{ props }">
-        <div v-if="activeFlag">
-          <v-btn
-          color="primary"
-          v-bind="props"
-          >
-          {{ btnTitle }}
-          </v-btn>
-        </div>
-        <div v-else>
-          </div> 
-      </template>
-        <v-card>
+      <v-card v-if="veiwflag">
         <v-card-title>
           <span class="text-h5">{{ title }}</span>
         </v-card-title>
         <v-form ref="form">
-        <v-card-text>
+        <v-card-text
+          v-for="(item, index) in this.form_data.data" 
+          :key="index"
+          :property="item.key"
+          :label="item.col">
           <v-container>
             <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
+              <v-col cols="12">
                 <v-text-field
-                  v-model="inputForm.first_name"
+                  v-model="item.first_name"
                   :rules="rules.required"
                   label="first name*"
                   required
                 ></v-text-field>
               </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
+              <v-col cols="12">
                 <v-text-field
-                  v-model="inputForm.last_name"
+                  v-model="item.last_name"
                   :rules="rules.required"
                   label="last name*"
                   required
                 ></v-text-field>
               </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
+              <v-col cols="12">
                 <v-text-field
-                  v-model="inputForm.username"
+                  v-model="item.username"
                   :counter="70"
                   :rules="rules.username"
                   label="username*"
@@ -168,20 +167,10 @@ export default {
               </v-col>
               <v-col cols="12">
                 <v-text-field
-                  v-model="inputForm.email"
+                  v-model="item.email"
                   :rules="rules.email"
                   label="email*"
                   required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="inputForm.password"
-                  :counter="20"
-                  :rules="rules.password"
-                  label="password*"
-                  type="password"
-                  maxlength="20"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -190,13 +179,6 @@ export default {
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="blue-darken-1"
-            variant="text"
-            @click="close"
-          >
-            Close
-          </v-btn>
           <v-btn
             color="blue-darken-1"
             variant="text"
@@ -211,6 +193,5 @@ export default {
         </v-card-actions>
       </v-form>
       </v-card>
-    </v-dialog>
   </v-row>
 </template>
