@@ -17,11 +17,11 @@ const router = createRouter({
       name: 'Objectmain',
       component: Objectmain
     },
-    {
-      path: '/about',
-      name: 'about',
-      component: About
-    }
+    // {
+    //   path: '/about',
+    //   name: 'about',
+    //   component: About
+    // }
   ]
 })
 
