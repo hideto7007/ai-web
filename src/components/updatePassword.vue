@@ -31,9 +31,6 @@ export default {
     deep: true,
     immediate: true
     },
-    closeFlag() {
-        this.passwordViewFlag = this.closeFlag
-    }
   },
   methods: {
     clear () {

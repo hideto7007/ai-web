@@ -195,7 +195,7 @@ export default {
             variant="text"
             @click="close"
           >
-            Close
+            閉じる
           </v-btn>
           <v-btn
             color="blue-darken-1"
@@ -203,10 +203,10 @@ export default {
             @click="save"
             :disabled="!validFlag"
           >
-            Save
+            保存
           </v-btn>
           <v-btn @click="clear">
-            clear
+            クリア
           </v-btn>
         </v-card-actions>
       </v-form>

@@ -10,8 +10,7 @@ import updatePassword from '../updatePassword.vue';
 const router = useRouter()
 // const currentRoute = router.currentRoute.value.fullPath
 
-// ローカルストレージ情報取得
-let getjson = localStorage.getItem('token');
+
 const logoutDialog = ref(false)
 const accountViewFlag = ref(false)
 const passwordViewFlag = ref(false)
@@ -22,18 +21,11 @@ const items = [
         { title: 'パスワード変更', key: 'password' },
       ]
 
-const dialog = ref(false)
-
 const logout = () => {
   console.log("ログアウト")
   logoutDialog.value = false
   sessionStorage.clear()
   router.push('/auth')
-}
-
-const home = () => {
-  console.log("ホーム")
-  console.log(getjson)
 }
 
 const iconClick = (val) => {
@@ -47,9 +39,15 @@ const iconClick = (val) => {
   console.log(val)
 }
 
-const handleData = (flag) => {
+// emitハンドラー
+const handlePassword = (flag) => {
   passwordViewFlag.value = flag
   console.log('handle', passwordViewFlag.value)
+}
+
+const handleAccount = (flag) => {
+  accountViewFlag.value = flag
+  console.log('handle', accountViewFlag.value)
 }
 
 </script>
@@ -120,25 +118,25 @@ const handleData = (flag) => {
       max-width="250"
       >
         <infoAccount
-          title='アカウント情報'/>
+          title='アカウント情報'
+          @closed="handleAccount"/>
     </v-dialog>
   </v-row>
 </template>
 <!-- アカウント処理ここまで -->
 
-<!-- アカウント処理 -->
+<!-- パスワード処理 -->
 <template>
   <v-row justify="center">
     <v-dialog
       v-model="passwordViewFlag"
-      max-width="5000"
       >
       <updatePassword
-      @closed="handleData"/>
+      @closed="handlePassword"/>
     </v-dialog>
   </v-row>
 </template>
-<!-- アカウント処理ここまで -->
+<!-- パスワード処理ここまで -->
 
   </v-app-bar>
 </template>

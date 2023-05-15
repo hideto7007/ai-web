@@ -119,6 +119,7 @@ export default {
     },
     close () {
       this.dialog = false
+      this.$emit('closed', this.dialog)
     }
   },
 }
@@ -180,15 +181,22 @@ export default {
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
+            color="green-darken-1"
+            variant="text"
+            @click="close"
+          >
+          キャンセル
+          </v-btn>
+          <v-btn
             color="blue-darken-1"
             variant="text"
             @click="save"
             :disabled="!validFlag"
           >
-            Save
+            保存
           </v-btn>
           <v-btn @click="clear">
-            clear
+            クリア
           </v-btn>
         </v-card-actions>
       </v-form>

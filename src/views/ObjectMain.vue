@@ -228,7 +228,7 @@ if (sessionStorage.getItem('token') !== null) {
             variant="text"
             @click="dialog = false"
           >
-            Close
+            閉じる
           </v-btn>
           <v-btn
             color="blue-darken-1"
@@ -236,7 +236,7 @@ if (sessionStorage.getItem('token') !== null) {
             @click="save"
             :disabled="!validFlag"
           >
-            Save
+            保存
           </v-btn>
           <v-btn
             color="blue-darken-1"
@@ -244,7 +244,7 @@ if (sessionStorage.getItem('token') !== null) {
             @click="deleted"
             :disabled="!validFlag"
           >
-            Delete
+            削除
           </v-btn>
           <v-row justify="center">
             <v-dialog
@@ -257,7 +257,7 @@ if (sessionStorage.getItem('token') !== null) {
                   color="primary"
                   v-bind="props"
                 >
-                create
+                新規作成
                 </v-btn>
               </template>
               <v-card>
