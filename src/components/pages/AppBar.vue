@@ -4,6 +4,7 @@
 import { useRouter } from 'vue-router'
 import { ref } from "vue"
 import InfomationAccount from '../InfomationAccount.vue';
+import UpdatePasswords from '../UpdatePasswords.vue';
 
 // vueライブラリー定義
 const router = useRouter()
