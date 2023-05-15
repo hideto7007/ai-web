@@ -2,9 +2,8 @@
 <script setup>
 
 import { useRouter } from 'vue-router'
-import { ref, watch, reactive, computed } from "vue"
-import infoAccount from '../infoAccount.vue';
-import updatePassword from '../updatePassword.vue';
+import { ref } from "vue"
+import InfomationAccount from '../InfomationAccount.vue';
 
 // vueライブラリー定義
 const router = useRouter()
@@ -117,7 +116,7 @@ const handleAccount = (flag) => {
       v-model="accountViewFlag"
       max-width="250"
       >
-        <infoAccount
+        <InfomationAccount
           title='アカウント情報'
           @closed="handleAccount"/>
     </v-dialog>
