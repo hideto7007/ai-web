@@ -64,7 +64,7 @@ const handleData = (flag) => {
         >
           <v-icon>
           mdi-home
-        </v-icon>
+          </v-icon>
         </v-btn>
       </template>
       <v-list>

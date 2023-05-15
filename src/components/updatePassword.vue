@@ -64,39 +64,39 @@ export default {
                 <v-col 
                 cols="30">
                     <v-text-field
-                    v-model="updateData.current_password"
-                    :counter="20"
-                    :rules="rules.password"
-                    label="古いパスワード"
-                    type="password"
-                    maxlength="20"
+                        v-model="updateData.current_password"
+                        :counter="20"
+                        :rules="rules.password"
+                        label="古いパスワード"
+                        type="password"
+                        maxlength="20"
                     ></v-text-field>
                 </v-col>
                 <v-col 
                 cols="12">
                     <v-text-field
-                    v-model="updateData.new_password"
-                    :counter="20"
-                    :rules="rules.password"
-                    label="新しいパスワード"
-                    type="password"
-                    maxlength="20"
+                        v-model="updateData.new_password"
+                        :counter="20"
+                        :rules="rules.password"
+                        label="新しいパスワード"
+                        type="password"
+                        maxlength="20"
                     ></v-text-field>
                 </v-col>
                     <v-card-actions>
                     <v-spacer></v-spacer>
                         <v-btn
-                        color="green-darken-1"
-                        variant="text"
-                        @click="close"
+                            color="green-darken-1"
+                            variant="text"
+                            @click="close"
                         >
                         キャンセル
                         </v-btn>
                         <v-btn
-                        color="green-darken-1"
-                        variant="text"
-                        @click="update"
-                        :disabled="!validFlag"
+                            color="green-darken-1"
+                            variant="text"
+                            @click="update"
+                            :disabled="!validFlag"
                         >
                         更新
                         </v-btn>
