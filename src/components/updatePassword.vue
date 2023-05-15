@@ -83,14 +83,14 @@ export default {
                     <v-card-actions>
                     <v-spacer></v-spacer>
                         <v-btn
-                            color="green-darken-1"
+                            color="green"
                             variant="text"
                             @click="close"
                         >
                         キャンセル
                         </v-btn>
                         <v-btn
-                            color="green-darken-1"
+                            color="blue-darken-1"
                             variant="text"
                             @click="update"
                             :disabled="!validFlag"

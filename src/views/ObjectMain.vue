@@ -224,7 +224,7 @@ if (sessionStorage.getItem('token') !== null) {
         <v-divider></v-divider>
         <v-card-actions>
           <v-btn
-            color="blue-darken-1"
+            color="green"
             variant="text"
             @click="dialog = false"
           >
@@ -285,18 +285,18 @@ if (sessionStorage.getItem('token') !== null) {
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn
-                    color="blue-darken-1"
+                    color="green"
                     variant="text"
                     @click="createDialog = false"
                   >
-                    Close
+                    閉じる
                   </v-btn>
                   <v-btn
                     color="blue-darken-1"
                     variant="text"
                     @click="create"
                   >
-                    save
+                    保存
                   </v-btn>
                 </v-card-actions>
               </v-card>

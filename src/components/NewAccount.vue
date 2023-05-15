@@ -191,7 +191,7 @@ export default {
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="blue-darken-1"
+            color="green"
             variant="text"
             @click="close"
           >
@@ -205,7 +205,9 @@ export default {
           >
             保存
           </v-btn>
-          <v-btn @click="clear">
+          <v-btn 
+            outlined color="orange"
+            @click="clear">
             クリア
           </v-btn>
         </v-card-actions>

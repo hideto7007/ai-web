@@ -97,7 +97,7 @@ const handleAccount = (flag) => {
             いいえ
           </v-btn>
           <v-btn
-            color="green-darken-1"
+            color="blue-darken-1"
             variant="text"
             @click="logout"
           >
