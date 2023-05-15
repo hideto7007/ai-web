@@ -130,7 +130,7 @@ const handleAccount = (flag) => {
     <v-dialog
       v-model="passwordViewFlag"
       >
-      <updatePassword
+      <UpdatePasswords
       @closed="handlePassword"/>
     </v-dialog>
   </v-row>
