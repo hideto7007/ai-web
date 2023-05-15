@@ -43,7 +43,7 @@ const load = async () => {
               modelList = res.data.detail.result
               } else {
                 Swal.fire({
-                type: 'warning',
+                icon: 'warning',
                 title: 'Error',
                 text: 'エラー',
                 showConfirmButton:false,
@@ -53,7 +53,7 @@ const load = async () => {
               return modelList
             }).catch((err) => {
               Swal.fire({
-              type: 'warning',
+              icon: 'warning',
               title: 'Error',
               text: 'サーバーエラー: ' + err,
               showConfirmButton:false,
@@ -61,6 +61,13 @@ const load = async () => {
               })
             }).finally(() => {})
   } 
+
+
+let save
+let modelClick
+let create
+let deleted
+
 
 if (sessionStorage.getItem('token') !== null) {
   const reqestList = await load()
@@ -70,11 +77,11 @@ if (sessionStorage.getItem('token') !== null) {
     numList.push(i["id"])
   }
 
-  const modelClick = (val) => {
+  modelClick = (val) => {
     console.log(numList[val])
   }
 
-  const save = async () => {
+  save = async () => {
     dialog.value = false
     let request = {
       "data": [
@@ -94,7 +101,7 @@ if (sessionStorage.getItem('token') !== null) {
     await post(updateCreateAPI, request, router, currentRoute, 'update')
   }
 
-  const create = async () => {
+  create = async () => {
     // ここで一番大きい値のidを受け取っても既にDBの方で登録した履歴があれば
     // DBの方でid値を更新してくれる
     // 一旦、このままで実装進める
@@ -117,7 +124,7 @@ if (sessionStorage.getItem('token') !== null) {
     createDialog.value = false
   }
 
-  const deleted = async () => {
+  deleted = async () => {
     dialog.value = false
     let request = {
       "id": '',
