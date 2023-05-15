@@ -4,6 +4,7 @@
 import { useRouter } from 'vue-router'
 import { ref, watch, reactive, computed } from "vue"
 import infoAccount from '../infoAccount.vue';
+import updatePassword from '../updatePassword.vue';
 
 // vueライブラリー定義
 const router = useRouter()
@@ -44,6 +45,11 @@ const iconClick = (val) => {
     passwordViewFlag.value = true
   }
   console.log(val)
+}
+
+const handleData = (flag) => {
+  passwordViewFlag.value = flag
+  console.log('handle', passwordViewFlag.value)
 }
 
 </script>
@@ -106,38 +112,33 @@ const iconClick = (val) => {
 </template>
 <!-- ログアウト処理ここまで -->
 
+<!-- アカウント処理 -->
 <template>
   <v-row justify="center">
     <v-dialog
       v-model="accountViewFlag"
       max-width="250"
       >
-      <!-- <NewAccount 
-        btn-title='新規アカウント作成はこちら'
-        title='新規アカウント作成'
-        :dialogFlag="true"
-        :activeFlag="false"
-        :new-flag="false"/> -->
         <infoAccount
           title='アカウント情報'/>
     </v-dialog>
   </v-row>
 </template>
+<!-- アカウント処理ここまで -->
 
-    <!-- <template v-slot:prepend>
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
-    </template> -->
-<!-- 
-    <v-app-bar-title>
-      obuject detection App
-    </v-app-bar-title>
+<!-- アカウント処理 -->
+<template>
+  <v-row justify="center">
+    <v-dialog
+      v-model="passwordViewFlag"
+      max-width="5000"
+      >
+      <updatePassword
+      @closed="handleData"/>
+    </v-dialog>
+  </v-row>
+</template>
+<!-- アカウント処理ここまで -->
 
-
-      <v-btn @click="home">
-        <v-icon>
-          mdi-home
-        </v-icon>
-      </v-btn>
-    </template> -->
   </v-app-bar>
 </template>
