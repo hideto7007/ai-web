@@ -54,51 +54,49 @@ export default {
 
 
 <template>
-    <v-row justify="center">
-        <v-card max-width="5000">
-            <v-card-title>パスワード更新</v-card-title>
-                <v-form ref="form">
-                <v-col 
-                cols="30">
-                    <v-text-field
-                        v-model="updateData.current_password"
-                        :counter="20"
-                        :rules="rules.password"
-                        label="古いパスワード"
-                        type="password"
-                        maxlength="20"
-                    ></v-text-field>
-                </v-col>
-                <v-col 
-                cols="12">
-                    <v-text-field
-                        v-model="updateData.new_password"
-                        :counter="20"
-                        :rules="rules.password"
-                        label="新しいパスワード"
-                        type="password"
-                        maxlength="20"
-                    ></v-text-field>
-                </v-col>
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                        <v-btn
-                            color="green"
-                            variant="text"
-                            @click="close"
-                        >
-                        キャンセル
-                        </v-btn>
-                        <v-btn
-                            color="blue-darken-1"
-                            variant="text"
-                            @click="update"
-                            :disabled="!validFlag"
-                        >
-                        更新
-                        </v-btn>
-                    </v-card-actions>
-            </v-form>
-        </v-card>
-    </v-row>
-  </template>
+  <v-row justify="center">
+    <v-card max-width="5000">
+      <v-card-title>パスワード更新</v-card-title>
+        <v-form ref="form">
+          <v-col cols="30">
+            <v-text-field
+              v-model="updateData.current_password"
+              :counter="20"
+              :rules="rules.password"
+              label="古いパスワード"
+              type="password"
+              maxlength="20"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model="updateData.new_password"
+              :counter="20"
+              :rules="rules.password"
+              label="新しいパスワード"
+              type="password"
+              maxlength="20"
+            ></v-text-field>
+          </v-col>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+                <v-btn
+                  color="green"
+                  variant="text"
+                  @click="close"
+                >
+                キャンセル
+                </v-btn>
+                <v-btn
+                  color="blue-darken-1"
+                  variant="text"
+                  @click="update"
+                  :disabled="!validFlag"
+                >
+                更新
+                </v-btn>
+            </v-card-actions>
+        </v-form>
+    </v-card>
+  </v-row>
+</template>
