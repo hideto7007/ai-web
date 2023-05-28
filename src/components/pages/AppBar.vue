@@ -5,10 +5,14 @@ import { useRouter } from 'vue-router'
 import { ref } from "vue"
 import InfomationAccount from '../InfomationAccount.vue';
 import UpdatePasswords from '../UpdatePasswords.vue';
+import post from '../post';
 
 // vueライブラリー定義
 const router = useRouter()
-// const currentRoute = router.currentRoute.value.fullPath
+const currentRoute = router.currentRoute.value.fullPath
+
+
+const deleteAPI = "http://127.0.0.1:8000/api/session_delete"
 
 
 const logoutDialog = ref(false)
@@ -21,9 +25,13 @@ const items = [
         { title: 'パスワード変更', key: 'password' },
       ]
 
-const logout = () => {
+const logout = async () => {
   console.log("ログアウト")
   logoutDialog.value = false
+  let request = {
+      "session_key": sessionStorage.getItem('token'),
+    }
+  await post(deleteAPI, request, router, currentRoute, 'delete')
   sessionStorage.clear()
   router.push('/auth')
 }
