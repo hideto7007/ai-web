@@ -1,14 +1,21 @@
 <script setup>
 
-import { ref, watch, reactive, computed } from "vue"
-import { useRoute, useRouter } from 'vue-router'
+import { ref, watch, reactive, computed } from "vue";
+import { useRoute, useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import post from '../components/post'
+import post from '../components/post';
+import Query from "../components/queryList";
 
 // vueライブラリー定義
 const router = useRouter()
 const currentRoute = router.currentRoute.value.fullPath
+
+const id = sessionStorage.getItem('id')
+const username = sessionStorage.getItem('username')
+
+// クラスインスタンス化
+let query = new Query("user_id", "username").queryList(id, username)
 
 // 変数定義
 let imageList = []
@@ -29,37 +36,66 @@ watch(dialogm1, (afterDialogm1, beforeDialogm1) => {
     }
 )
 
+const requestAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_list/" + query
 const updateCreateAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_update"
 const deleteAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_delete"
 
+// 一旦、使わない
+/** 
+* @deprecated
+*/
+const apiClient = axios.create({
+  baseURL: requestAPI, // DjangoサーバーのURLに適宜変更
+  withCredentials: true // クッキーを送信するための設定
+});
+
+/** 
+* @deprecated
+*/
+const cookies = document.cookie.split(';');
+const cookieData = {};
+cookies.forEach(cookie => {
+  const [name, value] = cookie.trim().split('=');
+  cookieData[name] = decodeURIComponent(value);
+});
+
+// Cookie情報を使って何かを行う
+
 const load = async () => {
-  let modelList = ref([])
-    console.log(sessionStorage.getItem('token'))
-    return await axios
-          .get('http://127.0.0.1:8000/api/object_detection_model/object_detection_model_list/')
-          .then((res) => {
-            if (res.data.result_code === 0) {
-              // 入力値取得
-              modelList = res.data.detail.result
-              } else {
-                Swal.fire({
-                icon: 'warning',
-                title: 'Error',
-                text: 'エラー',
-                showConfirmButton:false,
-                showCloseButton:false,
-                })
-              }
-              return modelList
-            }).catch((err) => {
+  let modelList = []
+  // let queryList = []
+  // queryList.push('user_id=' + sessionStorage.getItem('id'))
+  console.log(sessionStorage.getItem('token'))
+  // apiClient.defaults.headers.common['X-CSRFToken'] = cookieData;
+  // console.log('apiClient', apiClient)
+  return await axios
+        .get(requestAPI, { withCredentials: true })
+        .then((res) => {
+          console.log(res)
+          if (res.data.result_code === 0) {
+            // 入力値取得
+            modelList = res.data.detail.result
+            } else {
               Swal.fire({
               icon: 'warning',
               title: 'Error',
-              text: 'サーバーエラー: ' + err,
+              text: 'セッションエラー',
               showConfirmButton:false,
               showCloseButton:false,
               })
-            }).finally(() => {})
+              router.push('/auth')
+              // router.go(currentRoute)
+            }
+            return modelList
+          }).catch((err) => {
+            Swal.fire({
+            icon: 'warning',
+            title: 'Error',
+            text: 'サーバーエラー: ' + err,
+            showConfirmButton:false,
+            showCloseButton:false,
+            })
+          }).finally(() => {})
   } 
 
 
@@ -67,11 +103,13 @@ let save
 let modelClick
 let create
 let deleted
+let reqestList
 
 
 if (sessionStorage.getItem('token') !== null) {
-  const reqestList = await load()
-  
+  reqestList = await load()
+
+
   for (const i of reqestList) {
     imageList.push(i["object_detection_model_name"])
     numList.push(i["id"])
@@ -135,8 +173,7 @@ if (sessionStorage.getItem('token') !== null) {
       }
     }
     await post(deleteAPI, request, router, currentRoute, 'delete')
-  }
-} else {
+}} else {
     await Swal.fire({
       icon: 'warning',
       title: 'Error',
