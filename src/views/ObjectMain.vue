@@ -13,9 +13,10 @@ const currentRoute = router.currentRoute.value.fullPath
 
 const id = sessionStorage.getItem('id')
 const username = sessionStorage.getItem('username')
+const token = sessionStorage.getItem('token')
 
 // クラスインスタンス化
-let query = new Query("user_id", "username").queryList(id, username)
+let query = new Query("username", "token", "user_id").queryList(username, token, id)
 
 // 変数定義
 let imageList = []
@@ -83,6 +84,7 @@ const load = async () => {
               showConfirmButton:false,
               showCloseButton:false,
               })
+              sessionStorage.clear()
               router.push('/auth')
               // router.go(currentRoute)
             }
