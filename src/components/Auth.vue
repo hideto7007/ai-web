@@ -26,6 +26,9 @@ const valid = ref(false)
 //     }
 // )
 
+// csrfToken取得
+// const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0];
+
 
 // 関数定義
 const login = async () => {
