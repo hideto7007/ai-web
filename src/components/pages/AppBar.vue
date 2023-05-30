@@ -62,29 +62,32 @@ const handleAccount = (flag) => {
 
 <template>
   <v-app-bar color="primary">
+    <v-app-bar-title>
+      obuject detection App
+    </v-app-bar-title>
     <v-row justify="end">
-    <v-menu>
-      <template v-slot:activator="{ props }">
-        <v-btn
-          v-bind="props"
-        >
-          <v-icon>
-          mdi-home
-          </v-icon>
-        </v-btn>
-      </template>
-      <v-list>
-        <v-list-item
-          v-for="(item, index) in items"
-          :key="index"
-          :value="index"
-          @click="iconClick(item.key)"
-        >
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-  </v-row>
+      <v-col cols="3">
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn
+              v-bind="props"
+            >
+              <v-icon>mdi-home</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in items"
+              :key="index"
+              :value="index"
+              @click="iconClick(item.key)"
+            >
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-col>
+    </v-row>
   <!-- ログアウト処理 -->
   <template v-slot:append>
       <v-row justify="center">
