@@ -63,7 +63,7 @@ const handleAccount = (flag) => {
 <template>
   <v-app-bar color="primary">
     <v-app-bar-title>
-      obuject detection App
+      object detection App
     </v-app-bar-title>
     <v-row justify="end">
       <v-col cols="3">
