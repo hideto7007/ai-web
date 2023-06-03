@@ -79,7 +79,7 @@ const login = async () => {
       >
       <!-- class="headline" -->
         <v-card-title class="my-4 text-center text-h6">
-            Login to obuject detection App
+            Login to object detection App
         </v-card-title>
           <v-layout
             row
