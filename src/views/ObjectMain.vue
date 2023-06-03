@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import post from '../components/post';
+import request from "../components/request";
 import Query from "../components/queryList";
 
 // vueライブラリー定義
@@ -16,10 +17,10 @@ const username = sessionStorage.getItem('username')
 const token = sessionStorage.getItem('token')
 
 // クラスインスタンス化
-let query = new Query("username", "token", "user_id").queryList(username, token, id)
+let queryObject = new Query("username", "token", "user_id").queryList(username, token, id)
 
 // 変数定義
-let imageList = []
+let objectModelList = []
 let numList = []
 
 const name = ref("")
@@ -37,7 +38,7 @@ watch(dialogm1, (afterDialogm1, beforeDialogm1) => {
     }
 )
 
-const requestAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_list/" + query
+const requestAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_list/" + queryObject
 const updateCreateAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_update"
 const deleteAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_delete"
 
@@ -62,44 +63,6 @@ cookies.forEach(cookie => {
 
 // Cookie情報を使って何かを行う
 
-const load = async () => {
-  let modelList = []
-  // let queryList = []
-  // queryList.push('user_id=' + sessionStorage.getItem('id'))
-  console.log(sessionStorage.getItem('token'))
-  // apiClient.defaults.headers.common['X-CSRFToken'] = cookieData;
-  // console.log('apiClient', apiClient)
-  return await axios
-        .get(requestAPI, { withCredentials: true })
-        .then((res) => {
-          console.log(res)
-          if (res.data.result_code === 0) {
-            // 入力値取得
-            modelList = res.data.detail.result
-            } else {
-              Swal.fire({
-              icon: 'warning',
-              title: 'Error',
-              text: 'セッションエラー',
-              showConfirmButton:false,
-              showCloseButton:false,
-              })
-              sessionStorage.clear()
-              router.push('/auth')
-              // router.go(currentRoute)
-            }
-            return modelList
-          }).catch((err) => {
-            Swal.fire({
-            icon: 'warning',
-            title: 'Error',
-            text: 'サーバーエラー: ' + err,
-            showConfirmButton:false,
-            showCloseButton:false,
-            })
-          }).finally(() => {})
-  } 
-
 
 let save
 let modelClick
@@ -109,16 +72,18 @@ let reqestList
 
 
 if (sessionStorage.getItem('token') !== null) {
-  reqestList = await load()
+  reqestList = await request(requestAPI, sessionStorage)
 
 
   for (const i of reqestList) {
-    imageList.push(i["object_detection_model_name"])
+    objectModelList.push(i["object_detection_model_name"])
     numList.push(i["id"])
   }
 
   modelClick = (val) => {
-    console.log(numList[val])
+    console.log("debug")
+    let queryProject = new Query("model_name", "id").queryList(objectModelList[val], numList[val])
+    router.push('/projectlist/' + queryProject)
   }
 
   save = async () => {
@@ -197,7 +162,7 @@ if (sessionStorage.getItem('token') !== null) {
       <v-container>
         <v-row>
           <v-col
-            v-for="(value, keys) in imageList"
+            v-for="(value, keys) in objectModelList"
             :key="keys"
             cols="12"
             md="4"
@@ -245,7 +210,7 @@ if (sessionStorage.getItem('token') !== null) {
             column
           >
             <v-radio
-              v-for="(value, keys) in imageList"
+              v-for="(value, keys) in objectModelList"
               :key="keys"
               :label="value"
               :value="value"
