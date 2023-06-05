@@ -89,6 +89,13 @@ if (sessionStorage.getItem('token') !== null) {
   save = async () => {
     dialog.value = false
     let request = {
+      "params": [
+        {
+          "username": username,
+          "token": token,
+          "user_id": id
+        }
+      ],
       "data": [
         {
           "id": "",
@@ -117,6 +124,13 @@ if (sessionStorage.getItem('token') !== null) {
     }
     
     let request = {
+      "params": [
+        {
+          "username": username,
+          "token": token,
+          "user_id": id
+        }
+      ],
       "data": [
         {
           "id": String(Math.max(...numList) + 1),
@@ -132,6 +146,13 @@ if (sessionStorage.getItem('token') !== null) {
   deleted = async () => {
     dialog.value = false
     let request = {
+      "params": [
+        {
+          "username": username,
+          "token": token,
+          "user_id": id
+        }
+      ],
       "id": '',
     }
     for (const val of reqestList) {
