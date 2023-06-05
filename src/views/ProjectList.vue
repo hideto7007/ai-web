@@ -17,6 +17,11 @@ const id = sessionStorage.getItem('id')
 const username = sessionStorage.getItem('username')
 const token = sessionStorage.getItem('token')
 const dialog = ref(false)
+const createDialog = ref(false)
+const hasSaved = ref(false)
+const isEditing = ref(false)
+const model = ref(false)
+const project_name = ref("")
 
 const queryPrames = router.currentRoute.value.query
 
@@ -30,9 +35,16 @@ const requestAPI = "http://127.0.0.1:8000/api/project/project_list/" + query
 let resData
 let evaluationindexPush
 let getDetails
-let detailsFrom
+let detailsFrom = {
+    'プロジェクトid': '',
+    'プロジェクト名': '',
+    '物体検知モデルid': '',
+    '物体検知モデル': ''
+}
 let returnScreen
 let create
+let save
+let close
 
 if (sessionStorage.getItem('token') !== null) {
     resData = await request(requestAPI, sessionStorage)
@@ -43,18 +55,65 @@ if (sessionStorage.getItem('token') !== null) {
     }
 
     getDetails = (val) => {
-        detailsFrom = val
+        for (const [key, value] of Object.entries(val)) {
+            if (key === 'id') {
+                detailsFrom['プロジェクトid'] = value
+            } else if (key === 'project_name') {
+                detailsFrom['プロジェクト名'] = value
+            } else if (key === 'object_detection_model_name') {
+                detailsFrom['物体検知モデル'] = value
+            } else if (key === 'object_detection_model_name_id') {
+                detailsFrom['物体検知モデルid'] = value
+            }
+        }
     }
 
     returnScreen = () => {
-        console.log('/objectmain/' + `?user_id=${id}`)
         router.push('/objectmain/' + `?user_id=${id}`)
     }
 
-    create = () => {
+    save = () => {
         console.log("crate botton")
     }
-    
+
+    close = () => {
+        createDialog.value = false
+    }
+
+    create = () => {
+    let request = {
+        "params": [
+        {
+          "username": username,
+          "token": token,
+          "user_id": id
+        }
+      ],
+        "data": [
+            {
+                "id": "0",
+                "project_name": project_name.value,
+                "object_detection_model_name_id": ""
+            }
+        ]
+    }
+
+    const allGetId = resData.map(x => {
+        for (const [key, value] of Object.entries(x)) {
+            if (key === 'object_detection_model_name_id') {
+                return value
+            }
+        }
+    })
+
+    if (allGetId.every(v => v === allGetId[0])) {
+        request["data"][0]["object_detection_model_name_id"] = allGetId[0]
+    }
+    console.log(request)
+    isEditing.value = !isEditing.value
+    hasSaved.value = true
+    createDialog.value = false
+    }
 
 } else {
     await Swal.fire({
@@ -149,11 +208,85 @@ if (sessionStorage.getItem('token') !== null) {
       @click="returnScreen">
         前の画面に戻る
     </v-btn>
-    <v-btn
-      color="primary"
-      @click="create">
-        新規追加及び更新
-    </v-btn>
+    <v-row justify="center">
+    <div class="text-center">
+      <v-dialog
+        v-model="createDialog"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            color="primary"
+            v-bind="props"
+          >
+          新規追加及び更新
+          </v-btn>
+        </template>
+
+        <v-card
+          class="mx-auto"
+          color="purple-lighten-1"
+          max-width="800"
+        >
+        <v-toolbar width="500" color="purple">
+    
+            <v-toolbar-title>
+            <p>プロジェクト名新規追加</p>
+            </v-toolbar-title>
+    
+    
+            <v-btn
+                icon
+                @click="isEditing = !isEditing"
+            >
+                <v-fade-transition leave-absolute>
+                    <v-icon v-if="isEditing">mdi-close</v-icon>
+        
+                    <v-icon v-else>mdi-pencil</v-icon>
+                </v-fade-transition>
+            </v-btn>
+        </v-toolbar>
+    
+        <v-card-text>
+            <v-text-field
+            v-model="project_name"
+            :disabled="!isEditing"
+            color="white"
+            label="プロジェクト名"
+            ></v-text-field>
+    
+        </v-card-text>
+    
+        <v-divider></v-divider>
+    
+        <v-card-actions>
+            <v-spacer></v-spacer>
+                <v-btn
+                @click="close"
+                >
+                閉じる
+                </v-btn>
+        
+                <v-btn
+                :disabled="!isEditing"
+                @click="create"
+                >
+                登録
+                </v-btn>
+        </v-card-actions>
+    
+          <v-snackbar
+            v-model="hasSaved"
+            :timeout="2000"
+            attach
+            position="absolute"
+            location="bottom left"
+          >
+            新規追加
+          </v-snackbar>
+        </v-card>
+      </v-dialog>
+    </div>
+  </v-row>
 </template>
 
 
