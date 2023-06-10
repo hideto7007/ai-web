@@ -10,10 +10,10 @@ const post = async (api, request, router, path, type) => {
 
   if (type === 'update') {
     successTitle = '更新成功'
-    errorTitle = '変更するモデル名が入力されてません。'
+    errorTitle = '変更する値が入力されてません。'
   } else if (type === 'create') {
     successTitle = '新規作成成功'
-    errorTitle = '新規モデル名の値が入力されてません。'
+    errorTitle = '新規値が入力されてません。'
   } else if (type === 'delete') {
     successTitle = '削除成功'
     errorTitle = errorTemplate
