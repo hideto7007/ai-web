@@ -144,7 +144,6 @@ if (sessionStorage.getItem('token') !== null) {
   }
 
   deleted = async () => {
-    dialog.value = false
     let request = {
       "params": [
         {
@@ -161,6 +160,7 @@ if (sessionStorage.getItem('token') !== null) {
       }
     }
     await post(deleteAPI, request, router, currentRoute, 'delete')
+    dialog.value = false
 }} else {
     await Swal.fire({
       icon: 'warning',
