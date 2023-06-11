@@ -207,22 +207,26 @@ if (sessionStorage.getItem('token') !== null) {
             {
                 "id": "0",
                 "project_name": project_name.value,
-                "object_detection_model_name": ""
+                "object_detection_model_name": queryPrames["id"]
             }
         ]
     }
 
-    const allGetId = resData.map(x => {
-        for (const [key, value] of Object.entries(x)) {
-            if (key === 'object_detection_model_name_id') {
-                return value
-            }
-        }
-    })
+    /** 
+    * @deprecated
+    */
+    // const allGetId = resData.map(x => {
+    //     for (const [key, value] of Object.entries(x)) {
+    //         if (key === 'object_detection_model_name_id') {
+    //             return value
+    //         }
+    //     }
+    // })
 
-    if (allGetId.every(v => v === allGetId[0])) {
-        request["data"][0]["object_detection_model_name"] = allGetId[0]
-    }
+    // if (allGetId.every(v => v === allGetId[0])) {
+    //     request["data"][0]["object_detection_model_name"] = allGetId[0]
+    // }
+
 
     await post(updateCreateAPI, request, router, currentRoute, 'create')
     isEditing.value = !isEditing.value
