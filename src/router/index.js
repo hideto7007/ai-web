@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Auth from '../components/Auth.vue'
 import Objectmain from '../views/ObjectMain.vue'
 import ProjectList from '../views/ProjectList.vue'
-// import HomeView from '../views/HomeView.vue'
+import EvaluationImageList from '../views/EvaluationImageList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +21,11 @@ const router = createRouter({
       path: '/projectlist',
       name: 'projectlist',
       component: ProjectList
+    },
+    {
+      path: '/evaluationImageList',
+      name: 'evaluationImageList',
+      component: EvaluationImageList
     }
   ]
 })

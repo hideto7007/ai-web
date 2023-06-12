@@ -113,6 +113,8 @@ if (sessionStorage.getItem('token') !== null) {
     evaluationindexPush = (val) => {
       console.log("next parge")
       console.log(val)
+      let queryProject = new Query("project_name", "model_id").queryList(val["project_name"], val["object_detection_model_name_id"])
+      router.push('/evaluationImageList/' + queryProject)
     }
 
     getDetails = (val) => {
