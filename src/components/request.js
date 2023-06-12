@@ -3,11 +3,9 @@ import Swal from 'sweetalert2';
 
 const request = async (requestAPI, session, router) => {
     let requestList = []
-    console.log(session.getItem('token'))
     return await axios
           .get(requestAPI, { withCredentials: true })
           .then((res) => {
-            console.log(res)
             if (res.data.result_code === 0) {
               // 入力値取得
               requestList = res.data.detail.result

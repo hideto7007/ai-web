@@ -111,7 +111,8 @@ if (sessionStorage.getItem('token') !== null) {
 
     // 評価指標画面に遷移
     evaluationindexPush = (val) => {
-        console.log(val)
+      console.log("next parge")
+      console.log(val)
     }
 
     getDetails = (val) => {
@@ -154,8 +155,6 @@ if (sessionStorage.getItem('token') !== null) {
         "data": newRequest
     }
 
-    console.log(request)
-
     await post(updateCreateAPI, request, router, currentRoute, 'update')
     deleteSaveDialog.value = false
 
@@ -179,7 +178,7 @@ if (sessionStorage.getItem('token') !== null) {
         ],
         "data": newRequest,
       }
-      console.log(request)
+
       await post(deleteAPI, request, router, currentRoute, 'delete')
       deleteSaveDialog.value = false
     }

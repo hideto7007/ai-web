@@ -81,7 +81,6 @@ if (sessionStorage.getItem('token') !== null) {
   }
 
   modelClick = (val) => {
-    console.log("debug")
     let queryProject = new Query("model_name", "id").queryList(objectModelList[val], numList[val])
     router.push('/projectlist/' + queryProject)
   }
