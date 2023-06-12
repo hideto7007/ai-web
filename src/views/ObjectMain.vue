@@ -72,7 +72,7 @@ let reqestList
 
 
 if (sessionStorage.getItem('token') !== null) {
-  reqestList = await request(requestAPI, sessionStorage)
+  reqestList = await request(requestAPI, sessionStorage, router)
 
 
   for (const i of reqestList) {

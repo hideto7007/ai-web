@@ -79,15 +79,16 @@ const before_project_name = (requestData) => {
 }
 
 if (sessionStorage.getItem('token') !== null) {
-    resData = await request(requestAPI, sessionStorage)
+    resData = await request(requestAPI, sessionStorage, router)
 
-    // beforeData = before_project_name(JSON.parse(JSON.stringify(resDataCheckedAdd)))
-
-    for (let i = 0; i < resData.length; i++) {
-      let data = resData[i]
-      data["checked"] = false
-      resDataCheckedAdd.push(data)
+    if (typeof resData !== 'undefined') {
+      for (let i = 0; i < resData.length; i++) {
+        let data = resData[i]
+        data["checked"] = false
+        resDataCheckedAdd.push(data)
+      }
     }
+
 
     // 変更前のデータを格納
     beforeData = JSON.parse(JSON.stringify(resDataCheckedAdd))
@@ -306,75 +307,79 @@ if (sessionStorage.getItem('token') !== null) {
          </tr>
       </tbody>
    </v-table>
-    <v-btn
-      color="success"
-      @click="returnScreen">
-        前の画面に戻る
-    </v-btn>
+   <v-row justify="end">
+    <v-col cols="2">
+      <v-btn
+        color="success"
+        @click="returnScreen">
+          前の画面に戻る
+      </v-btn>
+    </v-col>
     <!-- 新規追加処理 -->
-    <v-row justify="center">
-    <div class="text-center">
-      <v-dialog
-        v-model="createDialog"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            color="primary"
-            v-bind="props"
-          >
-          新規追加
-          </v-btn>
-        </template>
-        <v-card
-          class="mx-auto"
-          color="purple-lighten-1"
-          max-width="800"
+    <v-col cols="1">
+      <div class="text-center">
+        <v-dialog
+          v-model="createDialog"
         >
-        <v-toolbar width="500" color="purple">
-          <v-toolbar-title>
-            <p>プロジェクト名新規追加</p>
-          </v-toolbar-title>
+          <template v-slot:activator="{ props }">
             <v-btn
-              icon
-              @click="isEditing = !isEditing"
+              color="primary"
+              v-bind="props"
             >
-              <v-fade-transition leave-absolute>
-                <v-icon v-if="isEditing">mdi-close</v-icon>
-        
-                <v-icon v-else>mdi-pencil</v-icon>
-              </v-fade-transition>
+            新規追加
             </v-btn>
-        </v-toolbar>
-        <v-card-text>
-            <v-text-field
-            v-model="project_name"
-            :disabled="!isEditing"
-            color="white"
-            label="プロジェクト名"
-            ></v-text-field>
-    
-        </v-card-text>
-        <v-divider/>
-          <v-card-actions>
-            <v-spacer/>
+          </template>
+          <v-card
+            class="mx-auto"
+            color="purple-lighten-1"
+            max-width="800"
+          >
+          <v-toolbar width="500" color="purple">
+            <v-toolbar-title>
+              <p>プロジェクト名新規追加</p>
+            </v-toolbar-title>
               <v-btn
-                @click="close"
-                >
-                閉じる
+                icon
+                @click="isEditing = !isEditing"
+              >
+                <v-fade-transition leave-absolute>
+                  <v-icon v-if="isEditing">mdi-close</v-icon>
+          
+                  <v-icon v-else>mdi-pencil</v-icon>
+                </v-fade-transition>
               </v-btn>
-        
-              <v-btn
-                :disabled="!isEditing"
-                @click="create"
-                >
-                登録
-              </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
-  </v-row>
+          </v-toolbar>
+          <v-card-text>
+              <v-text-field
+              v-model="project_name"
+              :disabled="!isEditing"
+              color="white"
+              label="プロジェクト名"
+              ></v-text-field>
+      
+          </v-card-text>
+          <v-divider/>
+            <v-card-actions>
+              <v-spacer/>
+                <v-btn
+                  @click="close"
+                  >
+                  閉じる
+                </v-btn>
+          
+                <v-btn
+                  :disabled="!isEditing"
+                  @click="create"
+                  >
+                  登録
+                </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
+    </v-col>
   <!-- 削除及び編集処理 -->
+  <v-col cols="1">
     <v-dialog
       v-model="deleteSaveDialog"
       width="auto"
@@ -432,6 +437,8 @@ if (sessionStorage.getItem('token') !== null) {
         </v-card-actions>
       </v-card>
     </v-dialog>
+  </v-col>
+  </v-row>
 </template>
 
 
@@ -439,5 +446,9 @@ if (sessionStorage.getItem('token') !== null) {
 
 .v-table__wrapper {
     overflow: hidden;
+}
+
+.custom-row {
+  max-height: 500px;
 }
 </style>
