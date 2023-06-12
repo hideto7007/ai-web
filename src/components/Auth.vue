@@ -122,7 +122,10 @@ const login = async () => {
                   btn-title='新規アカウント作成はこちら'
                   title='新規アカウント作成'/>
               </v-container>
-            <v-btn class="pink white--text" :disabled="!valid" @click="login">Login</v-btn>
+            <v-btn class="pink white--text" :disabled="!valid" @click="login">
+              <v-icon icon="mdi-login"></v-icon>
+              Login
+              </v-btn>
           </v-container>
         </v-form>
       </v-card>
