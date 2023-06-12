@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const request = async (requestAPI, session) => {
+const request = async (requestAPI, session, router) => {
     let requestList = []
     console.log(session.getItem('token'))
     return await axios
