@@ -15,22 +15,29 @@ import rules from "../components/rules";
 let items = ['best_model.pth', 'max_model.pth']
 const imageURL = ref(null)
 const imageFileData = ref(null)
-const imageFileList = ref([])
+const imageList  = ref([])
 
 
 let analysis
 let handleFileInputChange
+let getImageListFromLocalStorage
 
 if (sessionStorage.getItem('token') !== null) {
 
-    analysis = () => {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            imageURL.value = e.target.result
-            // 画像データをlocalStorageに保存
-            localStorage.setItem('imageURL', imageURL.value)
+    // 画像の取得
+    getImageListFromLocalStorage = () => {
+        const imageListString = localStorage.getItem('imageList')
+        if (imageListString) {
+            imageList.value = JSON.parse(imageListString)
         }
-        reader.readAsDataURL(imageFileData.value)
+    }
+
+    analysis = () => {
+        console.log(imageFileData.value)
+        const imageListString = JSON.stringify(imageFileData.value)
+        console.log(imageListString)
+        localStorage.setItem('imageList', imageListString)
+        console.log(localStorage.getItem('imageList'))
     }
 
     handleFileInputChange = (event) => {
@@ -40,12 +47,10 @@ if (sessionStorage.getItem('token') !== null) {
         }
     }
     
+    
     onMounted(() => {
         // ページ読み込み時にlocalStorageから画像データを復元
-        const storedImageURL = localStorage.getItem('imageURL')
-        if (storedImageURL) {
-            imageURL.value = storedImageURL
-        }
+        getImageListFromLocalStorage()
     })
 } else {
     await Swal.fire({
