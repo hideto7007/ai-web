@@ -26,6 +26,9 @@ const valid = ref(false)
 //     }
 // )
 
+// csrfToken取得
+// const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0];
+
 
 // 関数定義
 const login = async () => {
@@ -76,7 +79,7 @@ const login = async () => {
       >
       <!-- class="headline" -->
         <v-card-title class="my-4 text-center text-h6">
-            Login to obuject detection App
+            Login to object detection App
         </v-card-title>
           <v-layout
             row
@@ -119,7 +122,10 @@ const login = async () => {
                   btn-title='新規アカウント作成はこちら'
                   title='新規アカウント作成'/>
               </v-container>
-            <v-btn class="pink white--text" :disabled="!valid" @click="login">Login</v-btn>
+            <v-btn class="pink white--text" :disabled="!valid" @click="login">
+              <v-icon icon="mdi-login"></v-icon>
+              Login
+              </v-btn>
           </v-container>
         </v-form>
       </v-card>

@@ -1,17 +1,26 @@
 <script setup>
 
-import { ref, watch, reactive, computed } from "vue"
-import { useRoute, useRouter } from 'vue-router'
+import { ref, watch, reactive, computed } from "vue";
+import { useRoute, useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import post from '../components/post'
+import post from '../components/post';
+import request from "../components/request";
+import Query from "../components/queryList";
 
 // vueライブラリー定義
 const router = useRouter()
 const currentRoute = router.currentRoute.value.fullPath
 
+const id = sessionStorage.getItem('id')
+const username = sessionStorage.getItem('username')
+const token = sessionStorage.getItem('token')
+
+// クラスインスタンス化
+let queryObject = new Query("username", "token", "user_id").queryList(username, token, id)
+
 // 変数定義
-let imageList = []
+let objectModelList = []
 let numList = []
 
 const name = ref("")
@@ -29,61 +38,63 @@ watch(dialogm1, (afterDialogm1, beforeDialogm1) => {
     }
 )
 
+const requestAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_list/" + queryObject
 const updateCreateAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_update"
 const deleteAPI = "http://127.0.0.1:8000/api/object_detection_model/object_detection_model_delete"
 
-const load = async () => {
-  let modelList = ref([])
-    console.log(sessionStorage.getItem('token'))
-    return await axios
-          .get('http://127.0.0.1:8000/api/object_detection_model/object_detection_model_list/')
-          .then((res) => {
-            if (res.data.result_code === 0) {
-              // 入力値取得
-              modelList = res.data.detail.result
-              } else {
-                Swal.fire({
-                icon: 'warning',
-                title: 'Error',
-                text: 'エラー',
-                showConfirmButton:false,
-                showCloseButton:false,
-                })
-              }
-              return modelList
-            }).catch((err) => {
-              Swal.fire({
-              icon: 'warning',
-              title: 'Error',
-              text: 'サーバーエラー: ' + err,
-              showConfirmButton:false,
-              showCloseButton:false,
-              })
-            }).finally(() => {})
-  } 
+// 一旦、使わない
+/** 
+* @deprecated
+*/
+const apiClient = axios.create({
+  baseURL: requestAPI, // DjangoサーバーのURLに適宜変更
+  withCredentials: true // クッキーを送信するための設定
+});
+
+/** 
+* @deprecated
+*/
+const cookies = document.cookie.split(';');
+const cookieData = {};
+cookies.forEach(cookie => {
+  const [name, value] = cookie.trim().split('=');
+  cookieData[name] = decodeURIComponent(value);
+});
+
+// Cookie情報を使って何かを行う
 
 
 let save
 let modelClick
 let create
 let deleted
+let reqestList
 
 
 if (sessionStorage.getItem('token') !== null) {
-  const reqestList = await load()
-  
+  reqestList = await request(requestAPI, sessionStorage, router)
+
+
   for (const i of reqestList) {
-    imageList.push(i["object_detection_model_name"])
+    objectModelList.push(i["object_detection_model_name"])
     numList.push(i["id"])
   }
 
   modelClick = (val) => {
-    console.log(numList[val])
+    let queryProject = new Query("model_name", "id").queryList(objectModelList[val], numList[val])
+    router.push('/projectlist/' + queryProject)
   }
 
   save = async () => {
     dialog.value = false
     let request = {
+      "params": [
+        {
+          "username": username,
+          "token": token,
+          "user_id": id
+        }
+      ],
       "data": [
         {
           "id": "",
@@ -112,6 +123,13 @@ if (sessionStorage.getItem('token') !== null) {
     }
     
     let request = {
+      "params": [
+        {
+          "username": username,
+          "token": token,
+          "user_id": id
+        }
+      ],
       "data": [
         {
           "id": String(Math.max(...numList) + 1),
@@ -125,8 +143,14 @@ if (sessionStorage.getItem('token') !== null) {
   }
 
   deleted = async () => {
-    dialog.value = false
     let request = {
+      "params": [
+        {
+          "username": username,
+          "token": token,
+          "user_id": id
+        }
+      ],
       "id": '',
     }
     for (const val of reqestList) {
@@ -135,8 +159,8 @@ if (sessionStorage.getItem('token') !== null) {
       }
     }
     await post(deleteAPI, request, router, currentRoute, 'delete')
-  }
-} else {
+    dialog.value = false
+}} else {
     await Swal.fire({
       icon: 'warning',
       title: 'Error',
@@ -158,7 +182,7 @@ if (sessionStorage.getItem('token') !== null) {
       <v-container>
         <v-row>
           <v-col
-            v-for="(value, keys) in imageList"
+            v-for="(value, keys) in objectModelList"
             :key="keys"
             cols="12"
             md="4"
@@ -206,7 +230,7 @@ if (sessionStorage.getItem('token') !== null) {
             column
           >
             <v-radio
-              v-for="(value, keys) in imageList"
+              v-for="(value, keys) in objectModelList"
               :key="keys"
               :label="value"
               :value="value"

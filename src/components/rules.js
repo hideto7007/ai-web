@@ -15,6 +15,9 @@ const rules =
         email :[
             v => !!v || "メールは必須です",
             v => /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/.test(v) || "許可されていない文字が入力されています"
+        ],
+        imageFile: [
+            value => !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
         ]
     }
 

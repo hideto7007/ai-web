@@ -2,13 +2,17 @@
 <script setup>
 
 import { useRouter } from 'vue-router'
-import { ref, watch, reactive, computed } from "vue"
-import infoAccount from '../infoAccount.vue';
-import updatePassword from '../updatePassword.vue';
+import { ref } from "vue"
+import InfomationAccount from '../InfomationAccount.vue';
+import UpdatePasswords from '../UpdatePasswords.vue';
+import post from '../post';
 
 // vueライブラリー定義
 const router = useRouter()
-// const currentRoute = router.currentRoute.value.fullPath
+const currentRoute = router.currentRoute.value.fullPath
+
+
+const deleteAPI = "http://127.0.0.1:8000/api/session_delete"
 
 
 const logoutDialog = ref(false)
@@ -21,9 +25,13 @@ const items = [
         { title: 'パスワード変更', key: 'password' },
       ]
 
-const logout = () => {
+const logout = async () => {
   console.log("ログアウト")
   logoutDialog.value = false
+  let request = {
+      "session_key": sessionStorage.getItem('token'),
+    }
+  await post(deleteAPI, request, router, currentRoute, 'delete')
   sessionStorage.clear()
   router.push('/auth')
 }
@@ -54,29 +62,32 @@ const handleAccount = (flag) => {
 
 <template>
   <v-app-bar color="primary">
+    <v-app-bar-title>
+      object detection App
+    </v-app-bar-title>
     <v-row justify="end">
-    <v-menu>
-      <template v-slot:activator="{ props }">
-        <v-btn
-          v-bind="props"
-        >
-          <v-icon>
-          mdi-home
-          </v-icon>
-        </v-btn>
-      </template>
-      <v-list>
-        <v-list-item
-          v-for="(item, index) in items"
-          :key="index"
-          :value="index"
-          @click="iconClick(item.key)"
-        >
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-  </v-row>
+      <v-col cols="3">
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn
+              v-bind="props"
+            >
+              <v-icon>mdi-home</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in items"
+              :key="index"
+              :value="index"
+              @click="iconClick(item.key)"
+            >
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-col>
+    </v-row>
   <!-- ログアウト処理 -->
   <template v-slot:append>
       <v-row justify="center">
@@ -117,7 +128,7 @@ const handleAccount = (flag) => {
       v-model="accountViewFlag"
       max-width="250"
       >
-        <infoAccount
+        <InfomationAccount
           title='アカウント情報'
           @closed="handleAccount"/>
     </v-dialog>
@@ -131,7 +142,7 @@ const handleAccount = (flag) => {
     <v-dialog
       v-model="passwordViewFlag"
       >
-      <updatePassword
+      <UpdatePasswords
       @closed="handlePassword"/>
     </v-dialog>
   </v-row>

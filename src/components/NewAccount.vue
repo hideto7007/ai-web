@@ -1,13 +1,13 @@
 <script>
 import rules from "./rules"
 import post from "./post"
-import infoAccount from "./infoAccount.vue"
+import InfomationAccount from "./InfomationAccount.vue"
 
 const updateCreateAPI = "http://127.0.0.1:8000/api/create_account"
 
 export default {
   components: {
-    infoAccount,
+    InfomationAccount,
   },
   props: {
       btnTitle: {
