@@ -10,19 +10,40 @@ import Query from "../components/queryList";
 import rules from "../components/rules";
 
 
+// vueライブラリー定義
+const router = useRouter()
+const currentRoute = router.currentRoute.value.fullPath
+
+const queryPrames = router.currentRoute.value.query
+
+// 変数定義
+const id = sessionStorage.getItem('id')
+const username = sessionStorage.getItem('username')
+const token = sessionStorage.getItem('token')
+
+// クラスインスタンス化
+let query = new Query("username", "token", "user_id", "object_detection_model_name", "project_name").queryList(username, token, id, queryPrames["object_detection_model_name"], queryPrames["project_name"])
+
+// API定義
+const requestAPI = "http://127.0.0.1:8000/api/eval/learning_model_list/" + query
+
 
 // 変数定義
 let items = ['best_model.pth', 'max_model.pth']
 const imageURL = ref(null)
 const imageFileData = ref(null)
 const imageList  = ref([])
-
-
+let modelList
+let resData
 let analysis
 let handleFileInputChange
 let getImageListFromLocalStorage
+let returnScreen
 
 if (sessionStorage.getItem('token') !== null) {
+  resData = await request(requestAPI, sessionStorage, router)
+  modelList = Object.values(resData[0])
+
 
     // 画像の取得
     getImageListFromLocalStorage = () => {
@@ -30,6 +51,10 @@ if (sessionStorage.getItem('token') !== null) {
         if (imageListString) {
             imageList.value = JSON.parse(imageListString)
         }
+    }
+
+    returnScreen = () => {
+      router.push('/projectlist/' + `?model_name=${queryPrames["object_detection_model_name"]}&id=${queryPrames["model_id"]}`)
     }
 
     analysis = () => {
@@ -46,7 +71,6 @@ if (sessionStorage.getItem('token') !== null) {
             imageFileData.value = file
         }
     }
-    
     
     onMounted(() => {
         // ページ読み込み時にlocalStorageから画像データを復元
@@ -72,8 +96,15 @@ if (sessionStorage.getItem('token') !== null) {
   <v-row class="select-small-width">
     <v-select
       label="Select"
-      :items="items"
+      :items="modelList"
     ></v-select>
+    <v-btn
+      class="ma-2"
+      color="success"
+      @click="returnScreen"
+    >
+    前の画面に戻る
+  </v-btn>
   </v-row>
   <v-row class="file-small-width">
     <v-file-input
@@ -106,8 +137,8 @@ if (sessionStorage.getItem('token') !== null) {
 
 <style lang="scss" scoped>
 .select-small-width {
-    max-width: 500px;
-    padding: 50px 0px 0 50px;
+    max-width: 650px;
+    padding: 50px 0px 0 90px;
   }
 
   .file-small-width {

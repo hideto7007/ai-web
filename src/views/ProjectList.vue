@@ -30,6 +30,7 @@ let query = new Query("username", "token", "user_id", "model_name", "id").queryL
 
 // API定義
 const requestAPI = "http://127.0.0.1:8000/api/project/project_list/" + query
+console.log(requestAPI)
 const updateCreateAPI = "http://127.0.0.1:8000/api/project/project_create_or_update/"
 const deleteAPI = "http://127.0.0.1:8000/api/project/project_delete/"
 
@@ -113,7 +114,7 @@ if (sessionStorage.getItem('token') !== null) {
     evaluationindexPush = (val) => {
       console.log("next parge")
       console.log(val)
-      let queryProject = new Query("project_name", "object_detection_model_name").queryList(val["project_name"], val["object_detection_model_name"])
+      let queryProject = new Query("project_name", "object_detection_model_name", "model_id").queryList(val["project_name"], val["object_detection_model_name"], val["object_detection_model_name_id"])
       router.push('/evaluationImageList/' + queryProject)
     }
 
