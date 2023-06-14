@@ -37,44 +37,89 @@ let modelList
 let resData
 let analysis
 let handleFileInputChange
-let getImageListFromLocalStorage
+// let getImageListFromLocalStorage
 let returnScreen
+let localStorageList
+let existCheck
+
+let test = []
+
+
+const random = () => {
+  const min = 0
+  const max = 999
+  const randomNum = Math.floor(Math.random() * (max - min + 1)) + min
+
+  return randomNum.toString()
+}
+
+
+for (let i = 0; i < 10; i++) {
+  test.push(random())
+}
+
+const generateUUID = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    var r = Math.random() * 16 | 0,
+        v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16)
+  })
+}
+
 
 if (sessionStorage.getItem('token') !== null) {
   resData = await request(requestAPI, sessionStorage, router)
   modelList = Object.values(resData[0])
 
 
-    // 画像の取得
-    getImageListFromLocalStorage = () => {
-        const imageListString = localStorage.getItem('imageList')
-        if (imageListString) {
-            imageList.value = JSON.parse(imageListString)
-        }
-    }
+    // // 画像の取得
+    // getImageListFromLocalStorage = () => {
+    //     const imageListString = localStorage.getItem('imageList')
+    //     if (imageListString) {
+    //         imageList.value = JSON.parse(imageListString)
+    //     }
+    // }
 
     returnScreen = () => {
       router.push('/projectlist/' + `?model_name=${queryPrames["object_detection_model_name"]}&id=${queryPrames["model_id"]}`)
     }
 
     analysis = () => {
-        console.log(imageFileData.value)
-        const imageListString = JSON.stringify(imageFileData.value)
-        console.log(imageListString)
-        localStorage.setItem('imageList', imageListString)
-        console.log(localStorage.getItem('imageList'))
+      console.log(imageFileData.value);
+      let uuid = generateUUID()
+      console.log(uuid)
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imageURL.value = e.target.result;
+        // 画像URLをlocalStorageに保存
+        localStorage.setItem(uuid, imageURL.value);
+      };
+      reader.readAsDataURL(imageFileData.value);
     }
 
     handleFileInputChange = (event) => {
         const file = event.target.files[0]
         if (file) {
             imageFileData.value = file
+            imageURL.value = URL.createObjectURL(file);
         }
     }
     
     onMounted(() => {
-        // ページ読み込み時にlocalStorageから画像データを復元
-        getImageListFromLocalStorage()
+      // ページ読み込み時にlocalStorageから画像データを復元
+
+      const keys = Object.keys(localStorage)
+
+      localStorageList = keys.map((key) => localStorage.getItem(key))
+
+      existCheck = localStorageList.length
+
+      console.log(existCheck)
+
+      const storedImageURL = localStorage.getItem('imageURL')
+      if (storedImageURL) {
+        imageURL.value = storedImageURL;
+      }
     })
 } else {
     await Swal.fire({
@@ -115,6 +160,7 @@ if (sessionStorage.getItem('token') !== null) {
       label="Avatar"
       @change="handleFileInputChange"
    ></v-file-input>
+   <p>選択したファイルパス: {{ imageURL }}</p>
 
    <v-btn
       class="ma-2"
@@ -129,9 +175,9 @@ if (sessionStorage.getItem('token') !== null) {
   </v-btn>
 
   </v-row>
-
-  <img :src="imageURL" v-if="imageURL" alt="Uploaded Image" class="uploaded-image">
-
+   <!-- <div v-if="existCheck !== 0">
+    <img v-for="imageURL in localStorageList" :key="imageURL" :src="imageURL" alt="Uploaded Image" class="uploaded-image">
+  </div> -->
 </template>
 
 
