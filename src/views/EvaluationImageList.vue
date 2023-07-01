@@ -49,8 +49,6 @@ let existCheck
 
 let test = []
 
-let sample_git
-
 
 const random = () => {
   const min = 0
