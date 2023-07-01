@@ -207,6 +207,7 @@ if (sessionStorage.getItem('token') !== null) {
     </v-item-group>
   </Suspense>
   <v-row justify="center">
+    sampleはEfficientDetのMRI
     <v-dialog
       v-model="dialog"
       scrollable
