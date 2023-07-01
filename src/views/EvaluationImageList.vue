@@ -25,7 +25,9 @@ const token = sessionStorage.getItem('token')
 let query = new Query("username", "token", "user_id", "object_detection_model_name", "project_name").queryList(username, token, id, queryPrames["object_detection_model_name"], queryPrames["project_name"])
 
 // API定義
-const requestAPI = "http://127.0.0.1:8000/api/eval/learning_model_list/" + query
+const requestAPI = "http://127.0.0.1:8000/api/evals/learning_model_list/" + query
+
+console.log(requestAPI)
 
 
 // 変数定義
@@ -33,7 +35,10 @@ let items = ['best_model.pth', 'max_model.pth']
 const imageURL = ref(null)
 const imageFileData = ref(null)
 const imageList  = ref([])
+const selectedImageItem = ref(null)
+const selectedModelItem = ref(null)
 let modelList
+let inputList 
 let resData
 let analysis
 let handleFileInputChange
@@ -70,57 +75,48 @@ const generateUUID = () => {
 if (sessionStorage.getItem('token') !== null) {
   resData = await request(requestAPI, sessionStorage, router)
   modelList = Object.values(resData[0])
+  inputList = Object.values(resData[1])
 
 
-    // // 画像の取得
-    // getImageListFromLocalStorage = () => {
-    //     const imageListString = localStorage.getItem('imageList')
-    //     if (imageListString) {
-    //         imageList.value = JSON.parse(imageListString)
-    //     }
-    // }
+  // // 画像の取得
+  // getImageListFromLocalStorage = () => {
+  //     const imageListString = localStorage.getItem('imageList')
+  //     if (imageListString) {
+  //         imageList.value = JSON.parse(imageListString)
+  //     }
+  // }
 
-    returnScreen = () => {
-      router.push('/projectlist/' + `?model_name=${queryPrames["object_detection_model_name"]}&id=${queryPrames["model_id"]}`)
+  returnScreen = () => {
+    router.push('/projectlist/' + `?model_name=${queryPrames["object_detection_model_name"]}&id=${queryPrames["model_id"]}`)
+  }
+
+  analysis = () => {
+    if (selectedModelItem.value !== null && selectedImageItem.value !== null) {
+      console.log(selectedModelItem.value, selectedImageItem.value);
     }
+  }
 
-    analysis = () => {
-      console.log(imageFileData.value);
-      let uuid = generateUUID()
-      console.log(uuid)
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        imageURL.value = e.target.result;
-        // 画像URLをlocalStorageに保存
-        localStorage.setItem(uuid, imageURL.value);
-      };
-      reader.readAsDataURL(imageFileData.value);
+  handleFileInputChange = (event) => {
+      const file = event
+      console.log(file)
+  }
+  
+  onMounted(() => {
+    // ページ読み込み時にlocalStorageから画像データを復元
+
+    const keys = Object.keys(localStorage)
+
+    localStorageList = keys.map((key) => localStorage.getItem(key))
+
+    existCheck = localStorageList.length
+
+    console.log(existCheck)
+
+    const storedImageURL = localStorage.getItem('imageURL')
+    if (storedImageURL) {
+      imageURL.value = storedImageURL;
     }
-
-    handleFileInputChange = (event) => {
-        const file = event.target.files[0]
-        if (file) {
-            imageFileData.value = file
-            imageURL.value = URL.createObjectURL(file);
-        }
-    }
-    
-    onMounted(() => {
-      // ページ読み込み時にlocalStorageから画像データを復元
-
-      const keys = Object.keys(localStorage)
-
-      localStorageList = keys.map((key) => localStorage.getItem(key))
-
-      existCheck = localStorageList.length
-
-      console.log(existCheck)
-
-      const storedImageURL = localStorage.getItem('imageURL')
-      if (storedImageURL) {
-        imageURL.value = storedImageURL;
-      }
-    })
+  })
 } else {
     await Swal.fire({
       icon: 'warning',
@@ -140,6 +136,7 @@ if (sessionStorage.getItem('token') !== null) {
 <template>
   <v-row class="select-small-width">
     <v-select
+      v-model="selectedModelItem"
       label="Select"
       :items="modelList"
     ></v-select>
@@ -152,15 +149,11 @@ if (sessionStorage.getItem('token') !== null) {
   </v-btn>
   </v-row>
   <v-row class="file-small-width">
-    <v-file-input
-      :rules="rules.imageFile"
-      accept="image/png, image/jpeg, image/bmp"
-      placeholder="Pick an avatar"
-      prepend-icon="mdi-camera"
-      label="Avatar"
-      @change="handleFileInputChange"
-   ></v-file-input>
-   <p>選択したファイルパス: {{ imageURL }}</p>
+    <v-select
+      v-model="selectedImageItem"
+      label="Select"
+      :items="inputList"
+    ></v-select>
 
    <v-btn
       class="ma-2"
@@ -184,11 +177,11 @@ if (sessionStorage.getItem('token') !== null) {
 <style lang="scss" scoped>
 .select-small-width {
     max-width: 650px;
-    padding: 50px 0px 0 90px;
+    padding: 50px 0px 0 50px;
   }
 
   .file-small-width {
-    max-width: 665px;
+    max-width: 1000px;
     padding: 10px 0px 0 50px;
   }
 
