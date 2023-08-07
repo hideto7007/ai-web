@@ -4,7 +4,6 @@ import { ref, watch, reactive, computed, onMounted } from "vue";
 import { useRoute, useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import post from '../components/post';
 import request from "../components/request";
 import Query from "../components/queryList";
 import rules from "../components/rules";
@@ -34,7 +33,7 @@ console.log(requestAPI)
 let items = ['best_model.pth', 'max_model.pth']
 const imageURL = ref(null)
 const imageFileData = ref(null)
-const imageList  = ref([])
+const imageList = ref([])
 const selectedImageItem = ref(null)
 const selectedModelItem = ref(null)
 let modelList
@@ -47,7 +46,7 @@ let returnScreen
 let localStorageList
 let existCheck
 
-let test = []
+let test 
 
 
 const random = () => {
@@ -59,9 +58,9 @@ const random = () => {
 }
 
 
-for (let i = 0; i < 10; i++) {
-  test.push(random())
-}
+// for (let i = 0; i < 10; i++) {
+//   test.push(random())
+// }
 
 const generateUUID = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -93,6 +92,8 @@ if (sessionStorage.getItem('token') !== null) {
   analysis = () => {
     if (selectedModelItem.value !== null && selectedImageItem.value !== null) {
       console.log(selectedModelItem.value, selectedImageItem.value);
+      imageURL.value = "../ai-server"+selectedImageItem.value.slice(2)
+      console.log(imageURL.value)
     }
   }
 
@@ -168,9 +169,11 @@ if (sessionStorage.getItem('token') !== null) {
   </v-btn>
 
   </v-row>
-   <!-- <div v-if="existCheck !== 0">
-    <img v-for="imageURL in localStorageList" :key="imageURL" :src="imageURL" alt="Uploaded Image" class="uploaded-image">
-  </div> -->
+  <!-- <div v-if="existCheck !== 0"></div> ../img/test_940254_0086.jpg -->
+   <div>
+    {{ imageURL }}
+    <img src="../ai-server/evals/input/EfficientDet/library_data/test_940254_0086.jpg" alt="Image" />
+  </div>
 </template>
 
 
